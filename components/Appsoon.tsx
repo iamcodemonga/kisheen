@@ -2,7 +2,7 @@ import React from 'react'
 
 const Appsoon = () => {
     return (
-        <section className='px-4 lg:px-20 bg-accent py-40 mt-32 w-full flex justify-center'>
+        <section className='px-4 lg:px-20 bg-accent py-40 mt-10 lg:mt-16 w-full flex justify-center'>
             <div className='lg:flex justify-between items-center space-y-16'>
                 <div>
                     <h3 className='font-black'>APP COMMING SOON</h3>

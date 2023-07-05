@@ -2,7 +2,7 @@ import React from 'react'
 
 const Faqs = () => {
   return (
-    <div className='w-full lg:max-w-xl space-y-9'>
+    <div className='w-full lg:max-w-full space-y-9'>
         <h3 className="font-black mb-16">Frequently Asked Questions!</h3>
         <div className=''>
             <button className='flex items-center justify-between w-full mb-5'>

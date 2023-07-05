@@ -1,10 +1,10 @@
 import React from 'react'
 
-const contact = () => {
+const Contactform = () => {
     return (
-        <div className=''>
+        <div className='w-full justify-self-stretch'>
             <h3 className='font-black mb-10'>Contact Us</h3>
-            <form action="" method="post" className='space-y-8 lg:max-w-md w-full '>
+            <form action="" method="post" className='space-y-8 lg:max-w-full w-full '>
                 <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                     <label htmlFor="name" className='text-accent'>Name</label>
                     <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' />
@@ -23,7 +23,7 @@ const contact = () => {
                 </div>
                 <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                     <label htmlFor="message" className='text-accent'>Message</label>
-                    <textarea name="" id="message" cols="30" rows="3" className='bg-transparent outline-none' placeholder='write us a message'></textarea>
+                    <textarea name="" id="message" className='bg-transparent outline-none' placeholder='write us a message'></textarea>
                 </div>
                 <div>
                     <button type="submit" className='bg-accent w-full pt-5 pb-4 font-bold rounded-xl text-xl'>Send message</button>
@@ -33,4 +33,4 @@ const contact = () => {
     )
 }
 
-export default contact
+export default Contactform

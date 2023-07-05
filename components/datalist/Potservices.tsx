@@ -3,7 +3,7 @@ import React from 'react'
 
 const Potservices = () => {
     return (
-        <section className='container w-full'>
+        <section className='container w-full pb-16'>
             <h3 className='font-bold'>Pot services</h3>
             <p className='md:max-w-lg mb-10'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere aliquid temporibus debitis maxime!</p>
             <div className='grid md:grid-cols-2 gap-6'>

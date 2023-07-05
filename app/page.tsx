@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Footer from '@/components/Footer'
 import Navbar from '@/components/Navbar'
 import Banner from '@/components/Banner'
-import Sidebar from '@/components/Sidebar'
+import Sidebar from '@/components/bars/Sidebar'
 import Menu from '@/components/datalist/Menu'
 import Slidermenu from '@/components/datalist/Slidermenu'
 import Potservices from '@/components/datalist/Potservices'
@@ -14,7 +14,7 @@ export default function Home() {
     return (
       <>
         <Sidebar  /> 
-        <Navbar /> 
+        <Navbar type="transparent" /> 
         <Banner />
         {/* <Menu /> */}
         <Slidermenu />
