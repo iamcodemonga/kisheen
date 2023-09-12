@@ -9,7 +9,7 @@ const Userheading: FC<Active> = ({ page }) => {
     return (
         <>
             <header className='container pt-10 pb-5 lg:pb-10'>
-                <h3 className='my-3'>Hello, Emmanuel Ufot</h3>
+                <h3 className='my-3 text-6xl font-bold'>Hello, Emmanuel Ufot</h3>
                 <p>codemonga@gmail.com</p>
             </header>
             <div className='lg:hidden overflow-x-auto whitespace-nowrap container pb-5'>

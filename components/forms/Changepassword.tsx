@@ -3,7 +3,7 @@ import React from 'react'
 const Changepassword = () => {
     return (
         <div className='col-span-6 lg:col-span-5 min-w-full pb-28'>
-            <h4 className='font-black mb-10 mt-5 lg:mt-0'>Change password</h4>
+            <h4 className='font-black mb-10 mt-5 lg:mt-0 text-3xl'>Change password</h4>
             <form action="" method="post" className='space-y-8 lg:max-w-full w-full '>
                 <div className='flex flex-col'>
                     <div className='flex items-center justify-between'>

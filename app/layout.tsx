@@ -1,4 +1,6 @@
 import './globals.css'
+import Navbar from '@/components/bars/Navbar'
+import Footer from '@/components/Footer'
 
 export const metadata = {
   title: 'Eat healthy, Live longer - Qitcheen',
@@ -12,7 +14,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className='bg-primary'>{children}</body>
+      <body className='bg-primary'>
+        {children}
+        </body>
     </html>
   )
 }

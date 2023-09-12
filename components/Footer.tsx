@@ -3,9 +3,9 @@ import React from 'react'
 
 const Footer = () => {
     return (
-        <footer className='bg-gray-950 grid lg:grid-cols-4 justify-items-center content-center gap-y-10 gap-x-5 py-24 md:py-52 px-10 lg:px-16 overflow-hidden'>
+        <footer className='bg-gray-950 grid lg:grid-cols-4 justify-items-center content-center gap-y-10 gap-x-5 py-24 md:py-52 px-10 lg:px-16 overflow-x-hidden'>
             <div className=''>
-                <h1 className='mt-0 mb-1 text-center font-extrabold text-accent'>Qitcheen</h1>
+                <h2 className='mt-0 mb-5 text-center font-extrabold text-accent text-4xl md:text-7xl lg:text-6xl'>TheKitcheen</h2>
                 <p className='text-center px-3 max-w-md text-gray-400'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae, nulla deleniti! Amet beatae soluta repellendus</p>
             </div>
 
