@@ -1,8 +1,12 @@
-import React, { FC } from 'react'
 import Link from 'next/link'
+import { TMeal } from '@/types'
 
-const Banner: FC<any> = ({ meals, random }) => {
+type Props = {
+    meals: TMeal[];
+    random: number;
+}
 
+const Banner = ({ meals, random }: Props) => {
     return (
         <header className='relative w-full overflow-hidden' style={{ height: '100vh'}}>
             <img src={meals[random].photo.url} alt="" className='w-full h-full object-cover' />
@@ -13,7 +17,6 @@ const Banner: FC<any> = ({ meals, random }) => {
                 {/* <p className='font-bold text-xl mb-10 space-x-3'><span className='text-green-700'>&#8358;25,000</span><span className='text-red-500 line-through'>&#8358;40,000</span></p> */}
                 <Link href={"meal/"+meals[random].slug} className='px-10 py-4 rounded-3xl bg-primary hover:bg-accent hover:text-white transition-all text-accent font-bold'>Order now</Link>
             </div>
-            
         </header>
     )
 }

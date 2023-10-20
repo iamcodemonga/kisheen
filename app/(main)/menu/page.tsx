@@ -1,10 +1,9 @@
-import Footer from '@/components/Footer'
 import Menusection from '@/components/Menusection'
-import Navbar from '@/components/bars/Navbar'
 import WhatsApp from '@/components/WhatsApp'
 import React from 'react'
 import { redirect } from 'next/navigation'
-import { AllMeals, CategorisedMeals, FilterdedMeals } from '@/lib/fetch'
+import { AllMeals, CategorisedMeals, FilterdedMeals } from '@/actions'
+import MockMenu from '@/components/loaders/MockMenu'
 
 const Menu = async({ searchParams }: any) => {
 
@@ -30,9 +29,7 @@ const Menu = async({ searchParams }: any) => {
         const filteredMeals = await FilterdedMeals(min, max)
         return (
             <>
-                <Navbar />
                 <Menusection meals={filteredMeals} active={null} />
-                <Footer />
                 <WhatsApp />
             </>
         )
@@ -45,9 +42,7 @@ const Menu = async({ searchParams }: any) => {
 
         return (
             <>
-                <Navbar />
                 <Menusection meals={meals} active={mealcategory}  />
-                <Footer />
                 <WhatsApp />
             </>
         )

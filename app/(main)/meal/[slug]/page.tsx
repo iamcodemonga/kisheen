@@ -1,11 +1,10 @@
 import FoodInfo from '@/components/FoodInfo'
-import Footer from '@/components/Footer'
-import Navbar from '@/components/bars/Navbar'
 import WhatsApp from '@/components/WhatsApp'
 import RecommendedMeals from '@/components/datalist/RecommendedMeals'
 import React, { FC } from 'react'
-import { Meal, SimilarMeals } from '@/lib/fetch'
+import { Meal, SimilarMeals } from '@/actions'
 import { redirect } from 'next/navigation'
+import MockDetails from '@/components/loaders/MockDetails'
 
 // interface Pageprops  = {
 //     params: {
@@ -25,11 +24,10 @@ const page = async({ params } : any) => {
    
     return (
         <>
-            <Navbar />
             <FoodInfo meal={meal} />
             <RecommendedMeals meals={similar} />
-            <Footer />
             <WhatsApp />
+            {/* <MockDetails /> */}
         </>
     )
 }

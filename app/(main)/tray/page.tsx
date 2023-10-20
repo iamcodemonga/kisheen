@@ -1,9 +1,8 @@
 "use client"
 
-import Navbar from '@/components/bars/Navbar'
-import Footer from '@/components/Footer'
-import React, { FC, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
+import MockTray from '@/components/loaders/MockTray'
 
 interface ProductProps {
     image: string,
@@ -52,8 +51,7 @@ const FoodTray = () => {
 
     return (
         <>
-            <Navbar />
-            <section className='container py-10 lg:py-12 mt-0 overflow-x-hidde'>
+            <section className='container py-10 lg:py-12 mt-0 overflow-x-hidde hidde'>
                 <h3 className='mt-0 font-black text-5xl mb-3 lg:mb-5'>FOOD CART</h3>
                 <div className='xl:grid grid-cols-6 lg:gap-x-32 gap-y-5 hidde'>
                     <div className='col-span-6 lg:col-span-4'>
@@ -150,7 +148,7 @@ const FoodTray = () => {
                     </div>
                 </div>
             </section>
-            <Footer />
+            {/* <MockTray /> */}
         </>
     )
 }

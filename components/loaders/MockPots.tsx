@@ -1,13 +1,6 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { TMeal } from '@/types'
-import MockPots from '../loaders/MockPots'
+import React from 'react'
 
-type Props = {
-    meals: TMeal[]
-}
-
-const Potservices = ({ meals }: Props) => {
+const MockPots = () => {
     return (
         <>
             <section className='container w-full py-20'>
@@ -16,18 +9,14 @@ const Potservices = ({ meals }: Props) => {
                     <p className='md:max-w-sm mt-8 md:mt-0 mb-10'> Ducimus, repudiandae perspiciatis ratione soluta ad molestiae tempora odio ut saepe quis voluptatem non suscipit, labore beatae! Dolorum sapiente cupiditate tempore. Ducimus.</p>
                 </div>
                 <div className='grid md:grid-cols-2 gap-x-6 gap-y-12'>
-                    {meals ? meals.map((meal:any, index:number) => <Link href={`/meal/${meal.slug}`} className='pot-card relative overflow-hidden rounded-xl'>
-                        <div>
-                            {/* <img  alt="food" className='w-full object-cover' src={meal.photo.url} /> */}
-                            <Image  alt="food" className='w-full object-cover' src={meal.photo.url} width={800} height={1000} />
-                        </div>
-                        <div className='w-full h-full bg-black/50 absolute top-0 left-0'></div>
-                        <span className='absolute top-0 left-0 font-extrabold text-base rounded-tl-xl text-gray-900 space-x-3 bg-green-700 pt-2 pb-1 px-4'>ready in 5h - 24h</span>
+                    {[1, 2, 3, 4].map((meal:number, index:number) => <div className='pot-card relative overflow-hidden rounded-xl'>
+                        <div className='w-full bg-slate-300/50 mock_pot_img'></div>
+                        <span className='absolute top-0 left-0 rounded-tl-xl space-x-3 bg-slate-50 pt-2 pb-1 px-4 w-52 h-9'></span>
                         <div className='w-full absolute bottom-0 left-0 py-10 px-4'>
-                            <span className='font-extrabold text-lg rounded-lg text-gray-900 space-x-3 bg-green-700 pt-2 pb-1 px-4'>&#8358;{meal.priceSm} - &#8358;{meal.priceXl}</span>
-                            <h1 className='text-3xl lg:text-6xl font-bold text-primary mt-2'>{meal.title}</h1>
+                            <div className='rounded-lg bg-slate-50 pt-2 pb-1 px-4 w-1/4 h-5'></div>
+                            <div className='mt-2 w-3/4 h-8 bg-slate-50 rounded-lg'></div>
                         </div>
-                    </Link>) : null}
+                    </div>)}
                 </div>
             </section>
             <section className='bg-accent/5 w-full container pt-96 pb-28 lg:pb-52 -mt-96 lg:-mt-72'>
@@ -53,4 +42,4 @@ const Potservices = ({ meals }: Props) => {
     )
 }
 
-export default Potservices
+export default MockPots

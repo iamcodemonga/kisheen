@@ -7,7 +7,7 @@ import React, { FC, useState } from 'react'
 import Filterform from './forms/Filter'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { AllMeals, CategorisedMeals, FilterdedMeals, SearchMeals } from '@/lib/fetch'
+import { AllMeals, CategorisedMeals, FilterdedMeals, SearchMeals } from '@/actions'
 
 interface Status {
   open: boolean,
@@ -32,7 +32,7 @@ const Menusection: FC<any> = ({ meals, active }) => {
   }
 
   const handleClose = (e:any) => {
-    if (e.target.id == "filterbar") close()
+    if (e.target.id == "filterbar")  CloseFilter()
   }
 
   const handleCategory = async(group: string | null): Promise<void> => {
@@ -84,8 +84,8 @@ const Menusection: FC<any> = ({ meals, active }) => {
         {/* <Filterbars open={open} close={handleFilter} /> */}
         <aside className={open ? 'fixed w-full top-0 left-0 bg-primary/30 h-screen z-50' : 'hidden'} id='filterbar' onClick={handleClose}>
           <div className='absolute w-64 px-10 top-0 left-0 bg-primary h-full pt-28 space-y-10'>
-            {/* <Filterform filter={handleCategory} /> */}
-            <button type='button' className='absolute top-0 right-0 mr-3' onClick={close}>
+            <Filterform category={handleCategory} filter={handleFilter} active='active' />
+            <button type='button' className='absolute top-0 right-0 mr-3' onClick={CloseFilter}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
                 <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd" />
               </svg>
@@ -95,8 +95,8 @@ const Menusection: FC<any> = ({ meals, active }) => {
         {/* <Fullmenu /> */}
         <section className='container py-6 lg:py-16 col-span-6 lg:col-span-5'>
             <h1 className='text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
-            <div className='flex items-center justify-start mb-5'>
-                <button type="button" className='lg:hidden mr-3' onClick={CloseFilter}>
+            <div className='flex items-center justify-start mb-5 w-full'>
+                <button type="button" className='lg:hidden mr-3' onClick={OpenFilter}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
                     </svg>

@@ -78,3 +78,15 @@ small, .text_small {font-size: 0.75rem;} */
 .slider-container::-webkit-scrollbar {
   height: 0;
 }
+
+@media (min-width: 769px) {
+  .mock_pot_img {
+    height: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mock_pot_img {
+    height: 450px;
+  }
+}

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { FC, useState, useEffect } from 'react'
+import { useState } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import Sidebar from './Sidebar'
@@ -9,23 +9,18 @@ interface Navprops {
     type?: string
 }
 
-const Navbar: FC<Navprops> = ({ type }) => {
-
+const Navbar = ({ type }: Navprops) => {
     const [ open, setOpen ] = useState<boolean>(false)
     const pathname = usePathname()
 
     const handleSidebar = () => {
         setOpen(prev => !prev)
     }
-    // console.log(pathname.startsWith('/'))
-    // console.log(pathname)
-
-
 
     return (
         <>
-            <nav className={type=="transparent" ? "px-3 py-4 lg:px-20 fixed top-0 left-0 z-10 w-full" : "px-3 py-8 lg:px-20 z-10 w-full bg-primary sticky top-0 left-0"}>
-                <div className={type== 'transparent' ? 'flex items-center justify-between backdrop-blur-md bg-primary/20 py-6 px-6 rounded-2xl' : 'flex items-center justify-between'}>
+            <nav className={pathname == "/" ? "px-3 py-4 lg:px-20 fixed top-0 left-0 z-10 w-full" : "px-3 py-6 lg:px-20 z-10 w-full bg-primary sticky top-0 left-0"}>
+                <div className={pathname== "/" ? 'flex items-center justify-between backdrop-blur-md bg-primary/20 py-6 px-6 rounded-2xl' : 'flex items-center justify-between'}>
                     <div>
                         <Link href={`/`} className='text-xl md:text-2xl font-extrabold text-accent'>TheKitcheen</Link>
                     </div>

@@ -1,9 +1,7 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/bars/Navbar'
 import React from 'react'
 import PotList from '@/components/datalist/Potservices'
 import WhatsApp from '@/components/WhatsApp'
-import { PotMeals } from '@/lib/fetch'
+import { PotMeals } from '@/actions'
 
 const Potservices = async() => {
 
@@ -11,9 +9,7 @@ const Potservices = async() => {
 
     return (
         <>
-            <Navbar />
             <PotList meals={pot} />
-            <Footer />
             <WhatsApp />
         </>
     )

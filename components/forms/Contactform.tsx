@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Contactform = () => {
     return (
         <div className='w-full justify-self-stretch'>

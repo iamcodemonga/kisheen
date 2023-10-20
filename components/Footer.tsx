@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import React from 'react'
 
 const Footer = () => {
     return (
@@ -8,7 +7,6 @@ const Footer = () => {
                 <h2 className='mt-0 mb-5 text-center font-extrabold text-accent text-4xl md:text-7xl lg:text-6xl'>TheKitcheen</h2>
                 <p className='text-center px-3 max-w-md text-gray-400'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quae, nulla deleniti! Amet beatae soluta repellendus</p>
             </div>
-
             <div className='hidde'>
                 <ul className='space-y-2 hidden'>
                     <li><Link href="/">Home</Link></li>
@@ -17,7 +15,6 @@ const Footer = () => {
                     <li><Link href="/about">About</Link></li>
                 </ul>
             </div>
-
             <div className='mt-6'>
                 <ul className='space-y-2 text-gray-400'>
                     <li><Link href="/menu" className=' transition-all duration-300 hover:text-accent'>Twitter</Link></li>
@@ -26,7 +23,6 @@ const Footer = () => {
                     <li><Link href="/about" className='transition-all duration-300 hover:text-accent'>Youtube</Link></li>
                 </ul>
             </div>
-
             <div className='mt-6'>
                 <ul className='space-y-2 text-gray-400'>
                     <li><Link href="/menu" className=' transition-all duration-300 hover:text-accent'>Terms of service</Link></li>

@@ -1,5 +1,5 @@
 "use client"
-import React, { FC, useState, useEffect } from 'react'
+import { useState } from 'react'
 
 const Faqs = () => {
 
@@ -31,7 +31,7 @@ const Faqs = () => {
     return (
         <div className='w-full lg:max-w-full pt-16 lg:pt-0 space-y-9 '>
             <h3 className="font-black lg:mb-16 text-4xl">Frequently Asked Questions!</h3>
-            {QA && QA.map((q, index) => <div className=''>
+            {QA && QA.map((q, index) => <div key={index}>
                 <button className='flex items-center justify-between w-full mb-5' onClick={() => setActive(index)}>
                     <h5 className='my-0 text-start font-bold text-accent'>{q.question}</h5>
                     {index == active ? <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

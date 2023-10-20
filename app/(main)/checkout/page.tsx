@@ -1,12 +1,10 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/bars/Navbar'
 import CheckoutBanner from '@/components/banners/CheckoutBanner'
+import MockCheckoutItems from '@/components/loaders/MockCheckoutItems'
 import React from 'react'
 
 const Checkout = () => {
     return (
         <>
-            <Navbar />
             <CheckoutBanner />
             <section className='container mt-20'>
                 <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12'>
@@ -118,9 +116,9 @@ const Checkout = () => {
                             </div>
                         </div>
                     </div>
+                    {/* <MockCheckoutItems /> */}
                 </form>
             </section>
-            <Footer />
         </>
     )
 }
