@@ -6,7 +6,7 @@ const MockTray = () => {
             <h3 className='mt-0 font-black text-5xl mb-5 lg:mb-5'>FOOD CART</h3>
             <div className='xl:grid grid-cols-6 lg:gap-x-32 gap-y-5 pt-5'>
                 <div className='col-span-6 lg:col-span-4'>
-                    {[1, 2, 3, 4, 5].map((product, index) => <div className='border-b-2 md:pb-8 mb-6 pb-6 w-full'>
+                    {[1, 2, 3, 4, 5].map((product, index) => <div className='border-b-2 md:pb-8 mb-6 pb-6 w-full' key={index}>
                         <div className='flex items-center gap-x-5 overflow-x-hidde w-full'>
                             <div className='bg-slate-300/50 w-16 h-16 md:w-20 md:h-20 rounded-lg'></div>
                             <div className='w-full'>
