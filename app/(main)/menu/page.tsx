@@ -1,17 +1,18 @@
 import Menusection from '@/components/Menusection'
 import WhatsApp from '@/components/WhatsApp'
-import React from 'react'
 import { redirect } from 'next/navigation'
-import { AllMeals, CategorisedMeals, FilterdedMeals } from '@/actions'
-import MockMenu from '@/components/loaders/MockMenu'
+import { AllMeals, FilterdedMeals } from '@/actions'
+import Navbar from '@/components/bars/Navbar'
 
-const Menu = async({ searchParams }: any) => {
+const Menu = async({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
 
     let categories: string[] = [ 'soup', 'sauce', 'rice' ]
-    let category :string= searchParams.category;
+    let category :string = searchParams.category as string;
     let min:number = Number(searchParams.min);
     let max:number = Number(searchParams.max);
     let meals = await AllMeals();
+
+    console.log(``)
 
     if (min == undefined || min < 0 || Number.isNaN(min)) {
         min = 0;
@@ -26,10 +27,11 @@ const Menu = async({ searchParams }: any) => {
     }
 
     if (category == undefined || category == '') {
-        const filteredMeals = await FilterdedMeals(min, max)
+        const filteredMeals = await FilterdedMeals(6, 0, min, max)
         return (
             <>
-                <Menusection meals={filteredMeals} active={null} />
+                <Navbar />
+                <Menusection meals={filteredMeals} active={null} initialMinimumPrice={min} initialMaximumPrice={max} />
                 <WhatsApp />
             </>
         )
@@ -38,28 +40,18 @@ const Menu = async({ searchParams }: any) => {
 
         const index = categories.indexOf(category)
         const mealcategory = categories[index]
-        meals = await FilterdedMeals(min, max, category)
+        meals = await FilterdedMeals(6, 0, min, max, category)
 
         return (
             <>
-                <Menusection meals={meals} active={mealcategory}  />
+                <Navbar />
+                <Menusection meals={meals} active={mealcategory} initialMinimumPrice={min} initialMaximumPrice={max} />
                 <WhatsApp />
             </>
         )
     } else {
         redirect('/')
     }
-
-    // console.log(searchParams.category)
-
-    // if (searchParams) {
-    //     console.log('no params')
-    // }
-
-    // if (searchParams = {}) {
-    //     console.log('no params')
-    // }
-    // console.log(searchParams)
 
     
 }

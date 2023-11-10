@@ -1,8 +1,12 @@
+import MockNavbar from '@/components/loaders/MockNavbar'
 import MockTray from '@/components/loaders/MockTray'
 
 const loading = () => {
     return (
-        <MockTray />
+        <>
+            <MockNavbar />
+            <MockTray />
+        </>
     )
 }
 

@@ -44,6 +44,8 @@ export const FeaturedMeals = async() => {
         photo {
           url
         }
+        combo
+        meat
       }
     }`;
   const result: { meals: TMeal[] } = await hygraph.request(QUERY)
@@ -83,54 +85,56 @@ export const AllMeals = async() => {
         quantity
         slug
         title
+        combo
+        meat
       }
     }`;
     const result:any = await hygraph.request(QUERY);
     return result.meals;
 }
 
-export const CategorisedMeals = async(category:string | null) => {
+export const CategorisedMeals = async(category:string | null, limit: number, skip: number) => {
 
   const group = (category == 'rice' ? 'category_not: "soup"' : `category: "${category}"`);
 
   const QUERY = gql`
    {
-      meals(
-        where: {type_not: "pot", ${category && group}}
-      ) {
+      meals( where: {type_not: "pot", ${category && group}}, first: ${limit}, skip: ${skip} ) {
         id
         photo {
           url
         }
+        name
+        title
+        slug
         price
         quantity
-        slug
-        title
+        combo
+        meat
       }
   }`
     const result:any = await hygraph.request(QUERY);
     return result.meals;
 }
 
-export const FilterdedMeals = async(min:number, max:number, category?:string | null) => {
-
-  // let group: string | null = null;
+export const FilterdedMeals = async(limit: number, skip: number, min:number, max:number, category?:string | null) => {
 
   const group = (category == 'rice' ? 'category_not: "soup"' : `category: "${category}"`);
   
   const QUERY = gql`
     {
-        meals(
-          where: {type_not: "pot", price_gte: ${min}, price_lte: ${max}, ${category ? group : ''}}
-        ) {
-          id
-          photo {
-            url
-          }
-          price
-          quantity
-          slug
-          title
+        meals( where: {type_not: "pot", price_gte: ${min}, price_lte: ${max}, ${category ? group : ''}}, first: ${limit}, skip: ${skip} ) {
+            id
+            photo {
+              url
+            }
+            name
+            title
+            slug
+            price
+            quantity
+            combo
+            meat
         }
     }`;
     const result:any = await hygraph.request(QUERY);
@@ -146,17 +150,20 @@ export const SearchMeals = async(word:string) => {
         photo {
           url
         }
+        name
+        title
+        slug
         price
         quantity
-        slug
-        title
+        combo
+        meat
       }
     }`;
     const result:any = await hygraph.request(QUERY);
     return result.meals;
 }
 
-export const Meal = async(slug:any) => {
+export const Meal = async(slug:string) => {
   const QUERY = gql`
     {
         meal(where: {slug: "${slug}"}) {
@@ -201,6 +208,30 @@ export const SimilarMeals = async(slug:string, category: string) => {
       quantity
       slug
       title
+      combo
+      meat
+    }
+  }`;
+  const result: any = await hygraph.request(QUERY);
+  return result.meals;
+}
+
+export const SimilarPotMeals = async(id: string) => {
+
+  const QUERY = gql`
+  {
+    meals(where: {type: "pot", id_not: "${id}"}, first: 3) {
+      id
+      photo {
+        url
+      }
+      name
+      title
+      slug
+      price
+      priceSm,
+      priceXl
+      quantity
     }
   }`;
   const result: any = await hygraph.request(QUERY);

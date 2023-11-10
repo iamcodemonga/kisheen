@@ -1,7 +1,4 @@
-"use client"
-
 import React from 'react'
-import Link from 'next/link'
 import ForgotpasswordForm from '@/components/forms/ForgotpasswordForm'
 import Authbar from '@/components/bars/Authbar'
 

@@ -1,7 +1,6 @@
 import Footer from '@/components/Footer'
 import Navbar from '@/components/bars/Navbar'
 import ContactForm from '@/components/forms/Contactform'
-import React from 'react'
 
 const Contact = () => {
     return (

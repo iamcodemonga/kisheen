@@ -1,5 +1,3 @@
-"use client"
-
 import Authbar from '@/components/bars/Authbar'
 import Loginform from '@/components/forms/Loginform'
 import Link from 'next/link'

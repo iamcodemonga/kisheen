@@ -1,33 +1,37 @@
 import FoodInfo from '@/components/FoodInfo'
 import WhatsApp from '@/components/WhatsApp'
 import RecommendedMeals from '@/components/datalist/RecommendedMeals'
-import React, { FC } from 'react'
-import { Meal, SimilarMeals } from '@/actions'
+import { Meal, SimilarMeals, SimilarPotMeals } from '@/actions'
 import { redirect } from 'next/navigation'
-import MockDetails from '@/components/loaders/MockDetails'
+import Navbar from '@/components/bars/Navbar'
 
-// interface Pageprops  = {
-//     params: {
-//         slug: string
-//     }
-// }
+type Pageprops  = {
+    params: {
+        slug: string;
+    }
+}
 
-const page = async({ params } : any) => {
-
-    const meal:any = await Meal(params.slug);
+const page = async({ params } : Pageprops) => {
+    const meal = await Meal(params.slug);
 
     if(!meal) {
         redirect('/');
     }
 
-    const similar:any = await SimilarMeals(params.slug, meal.category)
+    let similarMeals;
+
+    if (meal.type != "pot") {
+        similarMeals = await SimilarMeals(params.slug, meal.category);
+    } else {
+        similarMeals = await SimilarPotMeals(meal.id);
+    }
    
     return (
         <>
+            <Navbar />
             <FoodInfo meal={meal} />
-            <RecommendedMeals meals={similar} />
+            <RecommendedMeals meals={similarMeals} type={meal.type == "pot" ? meal.type : meal.type} />
             <WhatsApp />
-            {/* <MockDetails /> */}
         </>
     )
 }

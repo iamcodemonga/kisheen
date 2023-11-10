@@ -1,23 +1,22 @@
 'use client'
 
-import React, { FC, FormEvent, FormEventHandler, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { ChangeEvent } from 'react'
 
-interface Props {
-    filter:  (minimum:number, maximum:number, group:string | null) => void
-    category:  (group:string | null) => void
-    active: string
+interface FilterFormProps {
+    active: string | null;
+    min: number;
+    max: number;
+    changeMin: (value: number) => void;
+    changeMax: (value: number) => void;
+    filter:  (minimum:number, maximum:number, group:string | null) => void;
+    category:  (group:string | null) => void;
+    changeActive: (type: string | null) => void;
 }
 
-const Filter: FC<Props> = ({ filter, category, active }) => {
-
-    const [ minPrice, setMinPrice ] = useState<number>(0)
-    const [ maxPrice, setMaxPrice ] = useState<number>(100000)
-    const [ routeCategory, setRouteCategory ] = useState<string | null >(active);
-    const router = useRouter();
+const Filter = ({ min, max, active, changeMin, changeMax, filter, category, changeActive }: FilterFormProps) => {
 
     const handleChangeCategory = (route: string | null) => {
-        setRouteCategory(route);
+        changeActive(route);
         category(route)
         return;
     }
@@ -28,25 +27,25 @@ const Filter: FC<Props> = ({ filter, category, active }) => {
                 <small className='text-accent font-bold'>CATEGORIES</small>
                 <ul className='space-y-4 mt-3'>
                     <li>
-                        <button onClick={() => {handleChangeCategory(null)}} className={!routeCategory ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">All meals</button>
+                        <button onClick={() => {handleChangeCategory(null)}} className={!active ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">All meals</button>
                     </li>
                     <li>
-                        <button onClick={() => {handleChangeCategory('soup')}} className={routeCategory == 'soup' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Soup</button>
+                        <button onClick={() => {handleChangeCategory('soup')}} className={active == 'soup' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Soup</button>
                     </li>
                     <li>
-                        <button onClick={() => {handleChangeCategory('rice')}} className={routeCategory == 'rice' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Rice</button>
+                        <button onClick={() => {handleChangeCategory('rice')}} className={active == 'rice' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Rice</button>
                     </li>
                     <li>
-                        <button onClick={() => {handleChangeCategory('sauce')}} className={routeCategory == 'sauce' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Sauce</button>
+                        <button onClick={() => {handleChangeCategory('sauce')}} className={active == 'sauce' ? 'w-full bg-accent pb-2 pt-3 rounded-full text-base font-bold': 'w-full pb-2 pt-3 rounded-full text-base font-bold'} type="button">Sauce</button>
                     </li>
                 </ul>
             </div>
             <div>
                 <small className='text-accent font-bold'>PRICE FILTER</small>
-                <form action="" method="post" className='space-y-5 mt-4'>
-                    <input type="number" name="" id="minimum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none max-w-full' placeholder='minimum price' value={minPrice} onChange={(e:any) => setMinPrice(e.target.value)} />
-                    <input type="number" name="" id="maximum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none max-w-full' placeholder='maximum price' value={maxPrice} onChange={(e:any) => setMaxPrice(e.target.value)} />
-                    <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-bold' onClick={() => filter(minPrice, maxPrice, routeCategory)}>Filter</button>
+                <form action="" method="post" className='space-y-5 mt-4 w-full'>
+                    <input type="number" name="" id="minimum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='minimum price' value={min} onChange={(e:ChangeEvent<HTMLInputElement>) => changeMin(Number(e.target.value))} />
+                    <input type="number" name="" id="maximum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='maximum price' value={max} onChange={(e:ChangeEvent<HTMLInputElement>) => changeMax(Number(e.target.value))} />
+                    <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-bold' onClick={() => filter(min, max, active)}>Filter</button>
                 </form>
             </div>
         </>

@@ -1,13 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { TMeal } from '@/types'
-import MockPots from '../loaders/MockPots'
+import { PotMeals } from '@/actions'
 
-type Props = {
-    meals: TMeal[]
-}
+const Potservices = async() => {
 
-const Potservices = ({ meals }: Props) => {
+    const meals: TMeal[]  = await PotMeals();
+
     return (
         <>
             <section className='container w-full py-20'>
@@ -16,9 +15,8 @@ const Potservices = ({ meals }: Props) => {
                     <p className='md:max-w-sm mt-8 md:mt-0 mb-10'> Ducimus, repudiandae perspiciatis ratione soluta ad molestiae tempora odio ut saepe quis voluptatem non suscipit, labore beatae! Dolorum sapiente cupiditate tempore. Ducimus.</p>
                 </div>
                 <div className='grid md:grid-cols-2 gap-x-6 gap-y-12'>
-                    {meals ? meals.map((meal:any, index:number) => <Link href={`/meal/${meal.slug}`} className='pot-card relative overflow-hidden rounded-xl'>
+                    {meals ? meals.map((meal:TMeal) => <Link href={`/meal/${meal.slug}`} className='pot-card relative overflow-hidden rounded-xl' key={meal.id}>
                         <div>
-                            {/* <img  alt="food" className='w-full object-cover' src={meal.photo.url} /> */}
                             <Image  alt="food" className='w-full object-cover' src={meal.photo.url} width={800} height={1000} />
                         </div>
                         <div className='w-full h-full bg-black/50 absolute top-0 left-0'></div>
@@ -33,17 +31,23 @@ const Potservices = ({ meals }: Props) => {
             <section className='bg-accent/5 w-full container pt-96 pb-28 lg:pb-52 -mt-96 lg:-mt-72'>
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-40 gap-y-10">
                     <div className=''>
-                        <div className='block'><img src="food.png" alt="" className='h-60 mx-auto'/></div>
+                        <div className='block'>
+                            <img src="food.png" alt="" className='h-60 mx-auto'/>
+                        </div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quality Meals</h1>
                         <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
                     </div>
                     <div className=''>
-                        <div className="block"><img src="payment.png" alt="" className='h-60 mx-auto'/></div>
+                        <div className="block">
+                            <img src="payment.png" alt="" className='h-60 mx-auto'/>
+                        </div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Flexible Payment</h1>
                         <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
                     </div>
                     <div className=''>
-                        <div className="block"><img src="delivery.png" alt="" className='h-60 mx-auto'/></div>
+                        <div className="block">
+                            <img src="delivery.png" alt="" className='h-60 mx-auto'/>
+                        </div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quick Delivery</h1>
                         <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
                     </div>

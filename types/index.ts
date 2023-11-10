@@ -20,3 +20,20 @@ export type TMeal = {
     meat?: string;
     description?: string;
 }
+
+export type TCartItem = {
+    id?: string;
+    photo?: string;
+    name?: string;
+    title?: string;
+    slug?: string;
+    price?: number;
+    quantity?: number;
+    cartQty?: number;
+    type?: string;
+    category?: string;
+    combo?: string;
+    comboList?: string[];
+    meat?: string;
+    meatList?: string[];
+}

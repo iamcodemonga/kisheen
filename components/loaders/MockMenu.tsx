@@ -26,15 +26,15 @@ const MockMenu = () => {
             {/* <Fullmenu /> */}
             <section className='container py-6 lg:py-16 col-span-6 lg:col-span-5'>
                 <h1 className='text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
-                <div className='flex items-center justify-start mb-5'>
+                <div className='flex items-center justify-start mb-7 w-full'>
                     <button type="button" className='lg:hidden mr-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" />
                         </svg>
                     </button>
-                    <form>
-                        <input type="text" name="" id="search" placeholder='search meal' className='py-2 px-4 bg-gray-200 rounded-xl outline-none w-64 md:w-96' disabled />
-                    </form>
+                    <form className='w-full'>
+                      <input type="text" name="" id="search" placeholder='search meal' className='py-3 px-4 bg-gray-200 rounded-xl outline-none w-full' disabled />
+                  </form>
                 </div>
                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 lg:gap-y-14'>
                     {[1, 2, 3, 4, 5, 6].map((meal:number) => <div className='card w-full relative'>

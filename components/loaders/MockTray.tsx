@@ -24,25 +24,22 @@ const MockTray = () => {
                 </div>
                 <div className='col-span-6 lg:col-span-2'>
                     <div className='border-2 p-6 lg:sticky lg:top-32'>
-                        <h4 className='mt-0 font-bold uppercase text-3xl mb-5'>Summary</h4>
-                        <div className='space-y-5'>
+                        <h4 className='mt-0 font-bold uppercase text-3xl mb-5'>Cart Summary</h4>
+                        <div className='space-y-6'>
                             <div className='flex items-center justify-between'>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
-                                <div className='bg-slate-300/50 w-24 h-3 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
+                                <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>
                             </div>
                             <div className='space-y-4'>
                                 <div className='bg-slate-300/50 w-full h-12'></div>
-                                <div className='bg-slate-300/50 w-full h-12'></div>
-                                {/* <button type="button" className='w-full py-3 bg-blue-600 font-bold text-gray-300'>Pay with STRIPE</button> */}
-                                {/* <Link href="/checkout" className='block text-center w-full py-3 bg-accent font-bold'>Pay on Delivery</Link> */}
                             </div>
                         </div>
                     </div>
