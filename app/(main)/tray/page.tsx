@@ -82,11 +82,11 @@ const FoodTray = () => {
                             <div className='flex gap-x-5 overflow-x-hidde w-full'>
                                 <img className='object-cover w-12 h-12 md:w-20 md:h-20 mt-5 rounded-lg'  src={meal.photo} alt="cart-image" />
                                 <div className='w-full'>
-                                    <a href='/' className='block mt-5 mb-0 font-bold overflow-ellipsis break-all text-lg w-full'>{meal.title}</a>
+                                    <Link href={`/meal/${meal.slug}`} className='block mt-5 mb-0 font-bold overflow-ellipsis break-all text-lg w-full'>{meal.title}</Link>
                                     <div className='flex items-center justify-between mt-3 mb-3 md:mb-8'>
                                         <div className='space-x-3'>
-                                            <span className='text-red-700 line-through'>&#8358;{meal.price}</span>
-                                            <span className='text-green-700'>&#8358;{Number(meal.price)*0.67}</span>
+                                            <span className='text-red-700 line-through'>&#8358;{Number(meal.price)*Number(meal.cartQty)}</span>
+                                            <span className='text-green-700'>&#8358;{(Number(meal.price)*Number(meal.cartQty))*0.63}</span>
                                         </div>
                                         <button type='button' className='text-red-700 font-bold px-4 py-1 rounded-full flex items-center text-sm' onClick={() => handleDeleteMeal({ id: meal.id })}>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
@@ -170,7 +170,7 @@ const FoodTray = () => {
                                     <p>&#8358;{amount*0.63}</p>
                                 </div>
                                 <div className='space-y-4'>
-                                    <Link href="/checkout" className='block text-center w-full py-3 bg-gray-950 hover:text-accent font-bold text-primary'>Checkout</Link>
+                                    {items.length >= 1 ? <Link href="/checkout" className='block text-center w-full py-3 bg-gray-950 hover:text-accent font-bold text-primary'>Proceed to checkout</Link> : <button type="button" className='block text-center w-full py-3 bg-gray-950 hover:text-accent font-bold text-primary'>Proceed to checkout</button>}
                                 </div>
                             </div> : <MockCartSummary />}
                         </div>

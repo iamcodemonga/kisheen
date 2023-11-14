@@ -31,7 +31,7 @@ const Navbar = ({ type }: Navprops) => {
             <nav className={pathname == "/" ? "px-3 py-4 lg:px-20 fixed top-0 left-0 z-10 w-full" : pathname.startsWith('/checkout') ?  "px-3 py-6 lg:px-20 z-10 w-full bg-gray-950 sticky top-0 left-0" : "px-3 py-6 lg:px-20 z-10 w-full bg-primary sticky top-0 left-0"}>
                 <div className={pathname== "/" ? 'flex items-center justify-between backdrop-blur-md bg-primary/20 py-6 px-6 rounded-2xl' : 'flex items-center justify-between'}>
                     <div>
-                        <Link href={`/`} className='text-xl md:text-2xl font-extrabold text-accent'>TheKitcheen</Link>
+                        <Link href={`/`} className='text-xl md:text-2xl font-extrabold text-accent'>Thekitcheen</Link>
                     </div>
                     <div className='flex justify-center items-center lg:hidden space-x-7'>
                         <Link href={`/tray`} className='relative cursor-pointer' >

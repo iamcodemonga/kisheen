@@ -60,7 +60,7 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
     return (
         <>
             <Navbar />
-            <CheckoutBanner />
+            <CheckoutBanner meal={`${item.slug}`} />
             <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} />
         </>
     )

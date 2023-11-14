@@ -7,7 +7,7 @@ const Checkout = () => {
     return (
         <>
             <Navbar />
-            <CheckoutBanner />
+            <CheckoutBanner meal={undefined} />
             <CartCheckoutForm />
         </>
     )

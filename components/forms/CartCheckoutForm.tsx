@@ -3,6 +3,8 @@
 import { TCartItem, TMeal } from '@/types'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import EmptyCart from '../EmptyCart'
+import MockCartList from '../loaders/MockCartList'
 
 const CartCheckoutForm = () => {
 
@@ -115,9 +117,9 @@ const CartCheckoutForm = () => {
                                 <small><strong className='text-accent'>Meat:</strong> {item.meat}</small>
                                 <small><strong className='text-accent'>Amount:</strong> &#8358;{Number(item.price)*Number(item.cartQty)}</small>
                             </div>
-                        </div>) : null : null }
+                        </div>) : <EmptyCart /> : <MockCartList /> }
                     </div>
-                    <div className='mt-10'>
+                    {!pending ? items.length >= 1 ? <div className='mt-10'>
                         <h5 className='font-bold mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
@@ -141,7 +143,7 @@ const CartCheckoutForm = () => {
                                 <button type="button" className='w-full py-3 bg-accent font-bold'>Pay on delivery</button>
                             </div>
                         </div>
-                    </div>
+                    </div> : null : null }
                 </div>
             </form>
         </section>

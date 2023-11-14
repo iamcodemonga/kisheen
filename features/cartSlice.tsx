@@ -67,7 +67,7 @@ const cartSlice = createSlice({
                 state.items[itemIndex].cartQty = Math.floor(state.items[itemIndex].cartQty as number)+Math.floor(action.payload.cartQty as number);
                 state.items[itemIndex].combo = action.payload.combo;
                 state.items[itemIndex].meat = action.payload.meat;
-                toast.info(`Added More Items To Cart`, {
+                toast.success(`Added more meals to cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -80,7 +80,7 @@ const cartSlice = createSlice({
             } else {
                 const tempItem = { ...action.payload }
                 state.items.push(tempItem)
-                toast.info(`Meal added To cart`, {
+                toast.success(`Meal added To cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -106,7 +106,7 @@ const cartSlice = createSlice({
                     return;
                 }
                 (state.items[itemIndex].cartQty as number) += 1;
-                toast.info(`Added More To Cart`, {
+                toast.success(`Added more meals to cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -119,7 +119,7 @@ const cartSlice = createSlice({
             } else {
                 const tempItem = { ...action.payload, cartQty: 1}
                 state.items.push(tempItem)
-                toast.info(`Added To Cart`, {
+                toast.success(`Meal added to cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -141,7 +141,7 @@ const cartSlice = createSlice({
             
             if (itemIndex >= 0) {
                 state.items[itemIndex].combo = action.payload.combo;
-                toast.info(`combo changed to ${action.payload.combo}`, {
+                toast.success(`combo changed to ${action.payload.combo}`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -161,7 +161,7 @@ const cartSlice = createSlice({
             
             if (itemIndex >= 0) {
                 state.items[itemIndex].meat = action.payload.meat;
-                toast.info(`meat changed to ${action.payload.meat}`, {
+                toast.success(`meat changed to ${action.payload.meat}`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -181,7 +181,7 @@ const cartSlice = createSlice({
             let cartItems;
             if (state.items[itemIndex].cartQty == 1) {
                 cartItems = state.items.filter((item, index) => item.id !== action.payload.id)
-                toast.info(`Meal removed from cart`, {
+                toast.error(`Meal removed from cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -212,7 +212,7 @@ const cartSlice = createSlice({
                 localStorage.setItem("items", JSON.stringify(state.items))
                 localStorage.setItem("total", JSON.stringify(state.amount))
                 localStorage.setItem("quantity", JSON.stringify(state.quantity))
-                toast.info(`Meal removed From Cart`, {
+                toast.error(`Meal removed from cart`, {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
