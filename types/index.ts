@@ -37,3 +37,24 @@ export type TCartItem = {
     meat?: string;
     meatList?: string[];
 }
+
+export type TOrder = {
+    id?: string;
+    mealId: string;
+    customerId?: string | null;
+    photo?: string;
+    name: string;
+    combo: string;
+    meat: string;
+    type: string;
+    customerName: string;
+    email: string;
+    tel?: string;
+    country?: string;
+    state: string;
+    district: string;
+    address: string;
+    postalCode?: string;
+    quantity: number;
+    amount: number;
+}

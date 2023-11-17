@@ -22,7 +22,7 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
     let potPrices;
 
     const meatList = [ 'goat meat', 'beef', 'chicken', 'turkey', 'pork', 'catfish', 'fresh fish', 'catfish and fresh fish', 'catfish with fresh fish' ];
-    const comboList: string[] = [ 'garri', 'fufu', 'semovita', 'pounded yam', 'amala', 'white rice', 'rice', 'yam', 'plantain', 'yam and plantain' ];
+    const comboList: string[] = [ 'garri', 'fufu', 'semovita', 'pounded yam', 'amala', 'white rice', 'rice', 'yam', 'plantain', 'yam and plantain', 'salad', 'ofada sauce', 'salad and ofada sauce' ];
     const sizeList: string[] = [ 'small(sm)', 'medium(md)', 'large(lg)', 'extra-large(xl)' ]
 
     if(!item) {

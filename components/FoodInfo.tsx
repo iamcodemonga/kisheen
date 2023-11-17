@@ -103,7 +103,7 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
                     </div>
                     <div className='flex flex-col'>
                         <label htmlFor="" className='font-bold'>Quantity</label>
-                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement> | any) => setQuantity(e.target.value)} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
+                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(Number(e.target.value))} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
                     </div>
                     <div className='md:flex md:space-x-5 space-y-7 md:space-y-4 items-center'>
                         <button type="button" className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm' onClick={() => handleCart({id: meal.id, photo: meal.photo.url, name: meal.name, title: meal.title, slug: meal.slug, price: meal.price, quantity: meal.quantity, cartQty: quantity, type: meal.type, category: meal.category, combo: combo, comboList: meal.combo?.split(','), meat: meat, meatList: meal.meat?.split(',')})}>Add to cart</button>
@@ -134,6 +134,7 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
             </div>
         </section>
     )
+    
 }
 
 export default FoodInfo

@@ -90,3 +90,7 @@ small, .text_small {font-size: 0.75rem;} */
     height: 450px;
   }
 }
+
+.paystack-button {
+  @apply w-full py-3 bg-blue-950 font-bold text-white
+}

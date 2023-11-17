@@ -1,7 +1,12 @@
 "use client"
 
-import { TMeal } from '@/types'
+import { CreateOrder, VerifyOrder } from '@/actions';
+import { TMeal, TOrder } from '@/types'
+import axios from 'axios';
 import { useState } from 'react'
+import { toast } from "react-toastify";
+import { usePaystackPayment } from 'react-paystack';
+import { PaystackProps } from 'react-paystack/dist/types';
 
 type Props = {
     item: TMeal;
@@ -11,6 +16,8 @@ type Props = {
     size?: string | string[] | undefined;
     potPrices?: number | undefined;
 }
+
+// const pay = PaystackPop()
 
 const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
 
@@ -25,7 +32,64 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
 
     // react states
     const [ fee, setFee ] = useState<number>(1000);
+    const [ loading, setLoading ] = useState<boolean>(false);
+
+    // controlled inputs
+    const [ customerName, setCustomerName ] = useState<string>('')
+    const [ email, setEmail ] = useState<string>('')
+    const [ country, setCountry ] = useState<string>('nigeria')
+    const [ state, setState ] = useState<string>('enugu')
     const [ district, setDistrict ] = useState<string>('Enugu central')
+    const [ address, setAddress ] = useState<string>('')
+    const [ tel, setTel ] = useState<string>('')
+
+    type PaystackMetadata = {
+        customerName: string;
+        country: string
+        state: string;
+        district: string;
+        address: string;
+        tel: string;
+    }
+
+    const config = {
+        name: customerName,
+        email,
+        country,
+        state,
+        district,
+        address,
+        tel,
+        amount: item.type != "pot" ? ((item.price*Number(qty)*0.63)+fee+vat)*100 : (Number(potPrices)+fee+vat)*100,
+        publicKey: `${process.env.NEXT_PUBLIC_PAYSTACK_PK}`,
+    }
+
+    const initializePayment = usePaystackPayment(config);
+
+    const onSuccess = (reference?: any) => {
+        // Implementation for whatever you want to do with reference and after success call.
+        console.log(reference);
+      };
+
+    const onClose = () => {
+        console.log("payment was cancelled")
+    }
+
+    //   const paymentProps =  {
+    //     // reference: (new Date()).getTime().toString(),
+    //     email,
+    //     amount: item.type != "pot" ? ((item.price*Number(qty)*0.63)+fee+vat)*100 : (Number(potPrices)+fee+vat)*100,
+    //     name: customerName,
+    //     country,
+    //     state,
+    //     district,
+    //     address,
+    //     tel,
+    //     publicKey: 'pk_test_8abfe4c759803140c25a6cc4186db85fab290775',
+    //     text: 'Pay with card',
+    //     onSuccess: (reference: any) => console.log(reference.reference),
+    //     onClose: () => console.log('payment was cancelled'),
+    //   }
 
     // handle Fuctions
     const handleDistrict = (value: string) => {
@@ -51,26 +115,196 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
         return;
     }
 
+    const handlePayment= async( properties: TOrder[] ) => {
+
+        let nameRegex = /^([a-zA-Z ]+)$/;
+        let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
+        let telRegex = /^([0-9]{5,18})$/;
+
+        // check for empty input forms
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || address.trim() == "" || tel.trim() == "") {
+            toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid customer name format
+        if(!nameRegex.test(customerName)) {
+            toast.error(`Name must only contain alphabets!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid email format
+        if(!emailRegex.test(email)) {
+            toast.error(`Email format is invalid!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(!telRegex.test(tel)) {
+            toast.error(`Phone number must only contain numbers!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        initializePayment(onSuccess, onClose)
+        return;
+    }
+
+    const handlefreeCheckout = async(properties: TOrder[]) => {
+
+        let nameRegex = /^([a-zA-Z ]+)$/;
+        let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
+        let telRegex = /^([0-9]{5,18})$/;
+
+        // check for empty input forms
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || address.trim() == "" || tel.trim() == "") {
+            toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid customer name format
+        if(!nameRegex.test(customerName)) {
+            toast.error(`Name must only contain alphabets!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid email format
+        if(!emailRegex.test(email)) {
+            toast.error(`Email format is invalid!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(!telRegex.test(tel)) {
+            toast.error(`Phone number must only contain numbers!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        setLoading(true)
+        try {
+            const { data } = await axios.post('/api/user/orders?method=cash', properties);
+            if(data.status = "ok") {
+                toast.success(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                setLoading(false)
+                return;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+        return;
+    }
+
     return (
         <section className='container mt-20'>
-            <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0'>
+            <form  className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0' onSubmit={(e) => e.preventDefault()}>
                 <div className='col-span-6'>
                     <div className='space-y-5'>
                         <h5 className='font-bold text-xl'>Personal details</h5>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="name" className='text-accent'>Name</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' />
+                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="email" className='text-accent'>Email</label>
-                            <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' />
+                            <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                     </div>
                     <div className='space-y-5'>
                         <h5 className='font-bold mt-10 text-xl'>Address Informations</h5>
+                        <div className='hidden flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="country" className='text-accent'>Country</label>
+                            <select name="country" id="country" className='bg-transparent outline-none' value={country} onChange={(e) => setCountry(e.target.value)}>
+                                <option value="nigeria">Nigeria</option>
+                                <option value="ghana" disabled>Ghana</option>
+                                <option value="UAE" disabled>United Arab Emirates</option>
+                                <option value="canada" disabled>Canada</option>
+                                <option value="USA" disabled>United states of America</option>
+                                <option value="UK" disabled>United kingdom</option>
+                                <option value="SA" disabled>South Africa</option>
+                            </select>
+                        </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="state" className='text-accent'>State</label>
-                            <select name="state" id="state" className='bg-transparent outline-none'>
+                            <select name="state" id="state" className='bg-transparent outline-none' value={state} onChange={(e) => setState(e.target.value)}>
                                 <option value="enugu">Enugu</option>
                                 <option value="anambra" disabled>Anambra</option>
                                 <option value="portharcourt" disabled>Port Harcourt</option>
@@ -83,16 +317,16 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="subject" className='text-accent'>District</label>
                             <select name="" id="subject" className='bg-transparent outline-none' value={district} onChange={(e) => handleDistrict(e.target.value)}>
-                                {districtList.length > 0 ? districtList.map((area) => <option value={area}>{area}</option>) : null}
+                                {districtList.length > 0 ? districtList.map((area, index) => <option value={area} key={index}>{area}</option>) : null}
                             </select>
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="address" className='text-accent'>Address line</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' />
+                            <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' value={address} onChange={(e) => setAddress(e.target.value)} />
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="phone" className='text-accent'>Phone number</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="phone" placeholder='Add your phone number' />
+                            <input className='bg-transparent outline-none' type="tel" name="" id="phone" placeholder='Add your phone number' value={tel} onChange={(e) => setTel(e.target.value)} />
                         </div>
                     </div>
                 </div>
@@ -164,8 +398,15 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
                                 <p>&#8358;{item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white'>Pay with card</button>
-                                <button type="button" className='w-full py-3 bg-accent font-bold'>Pay on delivery</button>
+                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handlePayment([{ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
+                                {/* <button type="button" className='w-full py-3 bg-accent font-bold' onClick={() => handleCheckout({ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName: "Emmanuel ufot", email: "eufot30@gmail.com", tel: "", country: "Nigeria", state: "enugu", district: "enugu north", address: "presidential rd", quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat})}>Pay on delivery</button> */}
+                                {/* <PaystackButton className='w-full py-3 bg-blue-950 font-bold text-white' {...paymentProps} /> */}
+                                <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
+                                        e.preventDefault(); 
+                                        handlefreeCheckout([{ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])
+                                    }
+                                }>Pay on delivery</button>
+                                {loading ? <p className='py-3 font-bold'>Loading...</p> : null}
                             </div>
                         </div>
                     </div>

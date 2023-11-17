@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from "graphql-request"
-import { TMeal } from "@/types"
+import { TMeal, TOrder } from "@/types"
 
 const key = process.env.NEXT_PUBLIC_API_KEY;
 const bearer = process.env.NEXT_PUBLIC_GRAPH_BEARER;
@@ -236,4 +236,50 @@ export const SimilarPotMeals = async(id: string) => {
   }`;
   const result: any = await hygraph.request(QUERY);
   return result.meals;
+}
+
+export const CreateOrder = async(order: TOrder) => {
+
+  const MUTATE = gql`
+    mutation AddSingleOrder{
+      createOrder(
+        data: {
+          mealId: "${order.mealId}",
+          ${order.customerId != null ? `customerId: "${order.customerId}"` : ""},
+          name: "${order.name}",
+          combo: "${order.combo}",
+          meat: "${order.meat}",
+          type: "${order.type}",
+          customerName: "${order.customerName}",
+          email: "${order.email}",
+          tel: "${order.tel}",
+          country: "${order.country}",
+          state: "${order.state}",
+          district: "${order.district}",
+          address: "${order.address}",
+          quantity: ${order.quantity},
+          amount: ${order.amount},
+          pending: true
+        }
+      ) {
+        id
+      }
+    }`;
+  const result: any = await hygraph.request(MUTATE);
+  return result;
+  // return result.meals;
+}
+
+export const VerifyOrder = async(id: string) => {
+
+  const VERIFY = gql`
+    mutation VerifyOrder {
+      publishOrder(where: {id: "${id}"}) {
+        id
+      }
+    }`;
+
+    const result: any = await hygraph.request(VERIFY);
+    return result;
+  // return result.meals;
 }
