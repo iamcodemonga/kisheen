@@ -40,6 +40,7 @@ export type TCartItem = {
 
 export type TOrder = {
     id?: string;
+    receipt: string;
     mealId: string;
     customerId?: string | null;
     photo?: string;
@@ -55,6 +56,26 @@ export type TOrder = {
     district: string;
     address: string;
     postalCode?: string;
+    itemsCount: number;
     quantity: number;
     amount: number;
+}
+
+export type TPaystackTransactionProps = {
+    message: string;
+    redirecturl: string;
+    reference: string;
+    status: string;
+    trans: string;
+    transaction: string;
+    trxref: string;
+}
+
+export type OrdersEmailTemplateProps = {
+    name: string;
+    receipt?: string
+}
+
+export type WelcomeEmailProps = {
+    name: string;
 }

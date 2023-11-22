@@ -244,6 +244,7 @@ export const CreateOrder = async(order: TOrder) => {
     mutation AddSingleOrder{
       createOrder(
         data: {
+          receipt: "${order.receipt}",
           mealId: "${order.mealId}",
           ${order.customerId != null ? `customerId: "${order.customerId}"` : ""},
           name: "${order.name}",
@@ -257,6 +258,7 @@ export const CreateOrder = async(order: TOrder) => {
           state: "${order.state}",
           district: "${order.district}",
           address: "${order.address}",
+          itemsCount: ${order.itemsCount},
           quantity: ${order.quantity},
           amount: ${order.amount},
           pending: true

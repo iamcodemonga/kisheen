@@ -1,14 +1,15 @@
 "use client"
 
 import { CreateOrder, VerifyOrder } from '@/actions';
-import { TMeal, TOrder } from '@/types'
+import { TMeal, TOrder, TPaystackTransactionProps } from '@/types'
 import axios from 'axios';
 import { useState } from 'react'
 import { toast } from "react-toastify";
 import { usePaystackPayment } from 'react-paystack';
-import { PaystackProps } from 'react-paystack/dist/types';
+import OrderLoader from '../loaders/OrderLoader';
+import { useRouter } from 'next/navigation';
 
-type Props = {
+type TProps = {
     item: TMeal;
     meat: string | string[] | undefined;
     combo?: string | string[] | undefined;
@@ -19,8 +20,9 @@ type Props = {
 
 // const pay = PaystackPop()
 
-const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
+const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
+    const router = useRouter();
     const vat: number = 800;
     const districtList = [ 'Enugu central', 'Enugu north', 'Enugu east', 'Nkanu east', 'Nkanu west', 'Nsukka' ]
 
@@ -32,25 +34,17 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
 
     // react states
     const [ fee, setFee ] = useState<number>(1000);
-    const [ loading, setLoading ] = useState<boolean>(false);
+    const [ loading, setLoading ] = useState<boolean>(false)
 
     // controlled inputs
     const [ customerName, setCustomerName ] = useState<string>('')
     const [ email, setEmail ] = useState<string>('')
+    const [ orderType, setOrderType ] = useState<string>('home')
     const [ country, setCountry ] = useState<string>('nigeria')
     const [ state, setState ] = useState<string>('enugu')
     const [ district, setDistrict ] = useState<string>('Enugu central')
     const [ address, setAddress ] = useState<string>('')
     const [ tel, setTel ] = useState<string>('')
-
-    type PaystackMetadata = {
-        customerName: string;
-        country: string
-        state: string;
-        district: string;
-        address: string;
-        tel: string;
-    }
 
     const config = {
         name: customerName,
@@ -66,30 +60,60 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
 
     const initializePayment = usePaystackPayment(config);
 
-    const onSuccess = (reference?: any) => {
-        // Implementation for whatever you want to do with reference and after success call.
-        console.log(reference);
-      };
-
-    const onClose = () => {
-        console.log("payment was cancelled")
+    const generateReceipt = () => {
+        const timeStamp = new Date().getTime();
+        console.log(`timestamp: ${timeStamp}`)
+        const randomNum = Math.floor(Math.random() * 1000000000)
+        console.log(`random number: ${randomNum}`)
+        const uniqueId = timeStamp.toString() + randomNum.toString();
+        console.log(`uniqueId: ${uniqueId}`)
+        return uniqueId.slice(0, 10)
     }
 
-    //   const paymentProps =  {
-    //     // reference: (new Date()).getTime().toString(),
-    //     email,
-    //     amount: item.type != "pot" ? ((item.price*Number(qty)*0.63)+fee+vat)*100 : (Number(potPrices)+fee+vat)*100,
-    //     name: customerName,
-    //     country,
-    //     state,
-    //     district,
-    //     address,
-    //     tel,
-    //     publicKey: 'pk_test_8abfe4c759803140c25a6cc4186db85fab290775',
-    //     text: 'Pay with card',
-    //     onSuccess: (reference: any) => console.log(reference.reference),
-    //     onClose: () => console.log('payment was cancelled'),
-    //   }
+    const receipt = generateReceipt();
+
+    const handleOrder = async(method: string, materials: TOrder[], receipt?: string) => {
+        setLoading(true)
+        try {
+            const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
+            if(data.status == "ok") {
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt });
+                if (response.status == "ok") {
+                    toast.success(`${response?.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                }
+                setLoading(false);
+                router.push('/thanks');
+                return;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+    }
+
+    const onSuccess = (transaction?: TPaystackTransactionProps) => {
+        if (transaction?.message == "Approved" && transaction?.status == "success") {
+            console.log(transaction)
+            handleOrder('card', [{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
+            return;
+        }
+        console.log("payment went wrong")
+        return;
+    };
+
+    const onClose = () => {
+        console.log("payment was cancelled");
+        return;
+    };
 
     // handle Fuctions
     const handleDistrict = (value: string) => {
@@ -115,7 +139,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
         return;
     }
 
-    const handlePayment= async( properties: TOrder[] ) => {
+    const handleCardCheckout= async(properties: TOrder[]) => {
 
         let nameRegex = /^([a-zA-Z ]+)$/;
         let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
@@ -184,7 +208,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
         return;
     }
 
-    const handlefreeCheckout = async(properties: TOrder[]) => {
+    const handleFreeCheckout = async(properties: TOrder[]) => {
 
         let nameRegex = /^([a-zA-Z ]+)$/;
         let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
@@ -249,32 +273,13 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
             return;
         }
 
-        setLoading(true)
-        try {
-            const { data } = await axios.post('/api/user/orders?method=cash', properties);
-            if(data.status = "ok") {
-                toast.success(`${data.message}`, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
-                setLoading(false)
-                return;
-            }
-        } catch (error) {
-            console.log(error)
-        }
-        setLoading(false)
+        handleOrder('cash', properties, receipt);
         return;
     }
 
     return (
         <section className='container mt-20'>
+            {loading ? <OrderLoader pending={loading} /> : null}
             <form  className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0' onSubmit={(e) => e.preventDefault()}>
                 <div className='col-span-6'>
                     <div className='space-y-5'>
@@ -303,6 +308,13 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
                             </select>
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="ordertype" className='text-accent'>Order type</label>
+                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => setOrderType(e.target.value)}>
+                                <option value="home">Home delivery</option>
+                                <option value="pickup">Shop pickup</option>
+                            </select>
+                        </div>
+                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="state" className='text-accent'>State</label>
                             <select name="state" id="state" className='bg-transparent outline-none' value={state} onChange={(e) => setState(e.target.value)}>
                                 <option value="enugu">Enugu</option>
@@ -314,16 +326,16 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
                                 <option value="abuja" disabled>Abuja</option>
                             </select>
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="subject" className='text-accent'>District</label>
                             <select name="" id="subject" className='bg-transparent outline-none' value={district} onChange={(e) => handleDistrict(e.target.value)}>
                                 {districtList.length > 0 ? districtList.map((area, index) => <option value={area} key={index}>{area}</option>) : null}
                             </select>
-                        </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                        </div>: null}
+                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="address" className='text-accent'>Address line</label>
                             <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' value={address} onChange={(e) => setAddress(e.target.value)} />
-                        </div>
+                        </div> : null}
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="phone" className='text-accent'>Phone number</label>
                             <input className='bg-transparent outline-none' type="tel" name="" id="phone" placeholder='Add your phone number' value={tel} onChange={(e) => setTel(e.target.value)} />
@@ -398,15 +410,15 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: Props) => {
                                 <p>&#8358;{item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handlePayment([{ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
+                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
                                 {/* <button type="button" className='w-full py-3 bg-accent font-bold' onClick={() => handleCheckout({ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName: "Emmanuel ufot", email: "eufot30@gmail.com", tel: "", country: "Nigeria", state: "enugu", district: "enugu north", address: "presidential rd", quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat})}>Pay on delivery</button> */}
                                 {/* <PaystackButton className='w-full py-3 bg-blue-950 font-bold text-white' {...paymentProps} /> */}
-                                <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
+                                {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
                                         e.preventDefault(); 
-                                        handlefreeCheckout([{ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])
+                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])
                                     }
-                                }>Pay on delivery</button>
-                                {loading ? <p className='py-3 font-bold'>Loading...</p> : null}
+                                }>Pay on delivery</button> : null}
+                                {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}
                             </div>
                         </div>
                     </div>
