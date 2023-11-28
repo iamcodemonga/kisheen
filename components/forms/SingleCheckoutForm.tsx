@@ -62,11 +62,8 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
     const generateReceipt = () => {
         const timeStamp = new Date().getTime();
-        console.log(`timestamp: ${timeStamp}`)
         const randomNum = Math.floor(Math.random() * 1000000000)
-        console.log(`random number: ${randomNum}`)
         const uniqueId = timeStamp.toString() + randomNum.toString();
-        console.log(`uniqueId: ${uniqueId}`)
         return uniqueId.slice(0, 10)
     }
 
@@ -89,9 +86,11 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                         progress: undefined,
                         theme: "colored",
                     });
+                    setLoading(false);
+                    router.push('/thanks');
+                    return;
                 }
                 setLoading(false);
-                router.push('/thanks');
                 return;
             }
         } catch (error) {
@@ -102,7 +101,6 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            console.log(transaction)
             handleOrder('card', [{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
             return;
         }
@@ -208,7 +206,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         return;
     }
 
-    const handleFreeCheckout = async(properties: TOrder[]) => {
+    const handleFreeCheckout = async(properties: TOrder[], refno: string) => {
 
         let nameRegex = /^([a-zA-Z ]+)$/;
         let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
@@ -273,7 +271,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
             return;
         }
 
-        handleOrder('cash', properties, receipt);
+        handleOrder('cash', properties, refno);
         return;
     }
 
@@ -310,7 +308,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="ordertype" className='text-accent'>Order type</label>
                             <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => setOrderType(e.target.value)}>
-                                <option value="home">Home delivery</option>
+                                <option value="home" style={{ padding: '200px'}}>Home delivery</option>
                                 <option value="pickup">Shop pickup</option>
                             </select>
                         </div>
@@ -394,7 +392,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                         <h5 className='font-bold mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Subtotal</p>
+                                <p className=''>Sub-total</p>
                                 {item.type != "pot" ? <p>&#8358;{(item.price*Number(qty)*0.63)}</p> : <p>&#8358;{potPrices}</p>}
                             </div>
                             <div className='flex items-center justify-between'>
@@ -415,7 +413,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                                 {/* <PaystackButton className='w-full py-3 bg-blue-950 font-bold text-white' {...paymentProps} /> */}
                                 {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
                                         e.preventDefault(); 
-                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])
+                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
                                     }
                                 }>Pay on delivery</button> : null}
                                 {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}

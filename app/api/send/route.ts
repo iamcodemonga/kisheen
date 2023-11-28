@@ -17,6 +17,7 @@ export async function POST(req: NextRequest) {
                 subject,
                 react: EmailOrderTemplate({ name, receipt }) as ReactElement,
             });
+            console.log(data)
             if (error) {
                 return NextResponse.json({ status: "failed", message: `An error occured`});
             }
