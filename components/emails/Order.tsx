@@ -2,7 +2,7 @@ import { Body, Container, Column, Head, Heading, Html, Img, Link, Preview, Row, 
 import * as React from 'react';
 import { OrdersEmailTemplateProps } from '@/types';
   
-export const EmailOrderTemplate = ({ name, receipt }: OrdersEmailTemplateProps) => (
+export const EmailOrderTemplate = ({ name, receipt, delivery }: OrdersEmailTemplateProps) => (
   <Html>
     <Head />
     <Preview>We are on our way!!!</Preview>
@@ -17,10 +17,7 @@ export const EmailOrderTemplate = ({ name, receipt }: OrdersEmailTemplateProps) 
           />
         </Section>
         <Heading style={h1}>Hello, {name}</Heading>
-        <Text style={heroText}>
-          This is to notify you that we have received your order and currently processing it! Kindly exercise patience as you await your package as it will arrive in no time. You can always identify your order with the reference number below.
-        </Text>
-
+        <Text style={heroText}>{delivery == "home" ? "This is to notify you that we have received your order(s) and are currently processing it! Kindly exercise patience as you await your package as it will be delivered to your doorstep in no time. You can always identify your order with the reference number below.": "This is to notify you that we have received your order and are currently processing it! kindly head over to our shop in the next 30 minutes to identify and pickup your order using the reference number below."}</Text>
         <Section style={codeBox}>
           <Text style={confirmationCodeText}>{receipt}</Text>
         </Section>

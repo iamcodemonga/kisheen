@@ -162,8 +162,8 @@ const FoodTray = () => {
                                     <p>&#8358;{amount}</p>
                                 </div>
                                 <div className='flex items-center justify-between'>
-                                    <p className=''>Discount</p>
-                                    <p className='text-green-600 text-base'>37%</p>
+                                    <p className=''>Discount <strong className='text-green-600'>(37%)</strong></p>
+                                    <p className='text-green-600 text-base'> <strong>- &#8358;{amount*0.37}</strong></p>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <p className='font-bold'>sub-total</p>

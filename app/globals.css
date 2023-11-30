@@ -96,7 +96,7 @@ small, .text_small {font-size: 0.75rem;} */
 }
 
 select option {
-  background-color: aqua;
+  /* background-color: aqua; */
   appearance: none;
   height: 200px !important;
   margin: 200px !important;

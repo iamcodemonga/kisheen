@@ -250,6 +250,7 @@ export const CreateOrder = async(order: TOrder) => {
           name: "${order.name}",
           combo: "${order.combo}",
           meat: "${order.meat}",
+          method: "${order.method}",
           type: "${order.type}",
           customerName: "${order.customerName}",
           email: "${order.email}",
@@ -259,6 +260,7 @@ export const CreateOrder = async(order: TOrder) => {
           district: "${order.district}",
           address: "${order.address}",
           itemsCount: ${order.itemsCount},
+          prepaid: ${order.prepaid},
           quantity: ${order.quantity},
           amount: ${order.amount},
           pending: true

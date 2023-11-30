@@ -48,6 +48,7 @@ export type TOrder = {
     combo: string;
     meat: string;
     type: string;
+    method: string;
     customerName: string;
     email: string;
     tel?: string;
@@ -58,6 +59,7 @@ export type TOrder = {
     postalCode?: string;
     itemsCount: number;
     quantity: number;
+    prepaid: boolean;
     amount: number;
 }
 
@@ -73,6 +75,7 @@ export type TPaystackTransactionProps = {
 
 export type OrdersEmailTemplateProps = {
     name: string;
+    delivery: string;
     receipt?: string
 }
 

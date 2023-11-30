@@ -19,7 +19,8 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
     const [ food, setFood ] = useState<TMeal>(meal);
     const [ combo, setCombo ] = useState<string>(comboList[0])
     const [ meat, setMeat ] = useState<string>(meatList[0])
-    const [ quantity, setQuantity ] = useState<number>(1)
+    // const [ quantity, setQuantity ] = useState<number>(1)
+    const [ quantity, setQuantity ] = useState<string>("1")
     const [ potSize, setPotSize ] = useState<string>('medium(md)')
     const [ amount, setAmount ] = useState<number>(meal.price)
 
@@ -55,20 +56,27 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
     }
 
     const handleQuantity = (value: number): void => {
-        if (value < 1) {
-            setQuantity(1);
+
+        if (!Number(value)) {
+            setQuantity("1");
             setAmount(meal.price);
             return;
         }
 
-        if (value > meal.quantity) {
-            setQuantity(meal.quantity)
+        if (Number(value) < 1) {
+            setQuantity("1");
+            setAmount(meal.price);
+            return;
+        }
+
+        if (Number(value) > meal.quantity) {
+            setQuantity(meal.quantity.toString())
             setAmount(meal.price*value)
             return;
         }
 
-        setQuantity(value);
-        setAmount(meal.price*value)
+        setQuantity(value.toString());
+        setAmount(meal.price*Number(value))
         return;
     }
 
@@ -103,10 +111,11 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
                     </div>
                     <div className='flex flex-col'>
                         <label htmlFor="" className='font-bold'>Quantity</label>
-                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(Number(e.target.value))} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
+                        {/* <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(Number(e.target.value))} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} /> */}
+                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(e.target.value)} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
                     </div>
                     <div className='md:flex md:space-x-5 space-y-7 md:space-y-4 items-center'>
-                        <button type="button" className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm' onClick={() => handleCart({id: meal.id, photo: meal.photo.url, name: meal.name, title: meal.title, slug: meal.slug, price: meal.price, quantity: meal.quantity, cartQty: quantity, type: meal.type, category: meal.category, combo: combo, comboList: meal.combo?.split(','), meat: meat, meatList: meal.meat?.split(',')})}>Add to cart</button>
+                        <button type="button" className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm' onClick={() => handleCart({id: meal.id, photo: meal.photo.url, name: meal.name, title: meal.title, slug: meal.slug, price: meal.price, quantity: meal.quantity, cartQty: Number(quantity), type: meal.type, category: meal.category, combo: combo, comboList: meal.combo?.split(','), meat: meat, meatList: meal.meat?.split(',')})}>Add to cart</button>
                         <Link href={`/checkout/${food.slug}?qty=${quantity}&meat=${meat.trim()}&combo=${combo.trim()}`} className='bg-green-500 hover:bg-green-600 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm text-center block'>Buy Now</Link>
                     </div>
                 </form>

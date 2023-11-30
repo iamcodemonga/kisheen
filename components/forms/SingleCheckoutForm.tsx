@@ -1,6 +1,6 @@
 "use client"
 
-import { CreateOrder, VerifyOrder } from '@/actions';
+// import { CreateOrder, VerifyOrder } from '@/actions';
 import { TMeal, TOrder, TPaystackTransactionProps } from '@/types'
 import axios from 'axios';
 import { useState } from 'react'
@@ -17,8 +17,6 @@ type TProps = {
     size?: string | string[] | undefined;
     potPrices?: number | undefined;
 }
-
-// const pay = PaystackPop()
 
 const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
@@ -74,7 +72,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         try {
             const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
             if(data.status == "ok") {
-                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt });
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt, delivery: orderType });
                 if (response.status == "ok") {
                     toast.success(`${response?.message}`, {
                         position: "bottom-right",
@@ -101,7 +99,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            handleOrder('card', [{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
+            handleOrder('card', [{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
             return;
         }
         console.log("payment went wrong")
@@ -144,8 +142,22 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || address.trim() == "" || tel.trim() == "") {
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(orderType == "home" && address.trim() == "") {
+            toast.error(`Fill in your address information!`, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -213,8 +225,22 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || address.trim() == "" || tel.trim() == "") {
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(orderType == "home" && address.trim() == "") {
+            toast.error(`Fill in your address information!`, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -275,6 +301,17 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         return;
     }
 
+    const handleMethod = async(value: string) => {
+        if (value == "home") {
+            setOrderType(value);
+            setFee(1000);
+            return;
+        }
+        setOrderType(value);
+        setFee(0);
+        return;
+    }
+
     return (
         <section className='container mt-20'>
             {loading ? <OrderLoader pending={loading} /> : null}
@@ -307,7 +344,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="ordertype" className='text-accent'>Order type</label>
-                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => setOrderType(e.target.value)}>
+                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => handleMethod(e.target.value)}>
                                 <option value="home" style={{ padding: '200px'}}>Home delivery</option>
                                 <option value="pickup">Shop pickup</option>
                             </select>
@@ -392,8 +429,8 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                         <h5 className='font-bold mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Sub-total</p>
-                                {item.type != "pot" ? <p>&#8358;{(item.price*Number(qty)*0.63)}</p> : <p>&#8358;{potPrices}</p>}
+                                <p className=''>Sub-total <strong className='text-green-600'>(37% off)</strong></p>
+                                {item.type != "pot" ? <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{item.price*Number(qty)}</span><span className='text-green-600'>&#8358;{(item.price*Number(qty)*0.63)}</span></p> : <p>&#8358;{potPrices}</p>}
                             </div>
                             <div className='flex items-center justify-between'>
                                 <p className=''>Delivery fee</p>
@@ -408,12 +445,12 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                                 <p>&#8358;{item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
+                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
                                 {/* <button type="button" className='w-full py-3 bg-accent font-bold' onClick={() => handleCheckout({ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName: "Emmanuel ufot", email: "eufot30@gmail.com", tel: "", country: "Nigeria", state: "enugu", district: "enugu north", address: "presidential rd", quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat})}>Pay on delivery</button> */}
                                 {/* <PaystackButton className='w-full py-3 bg-blue-950 font-bold text-white' {...paymentProps} /> */}
                                 {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
                                         e.preventDefault(); 
-                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
+                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: false, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
                                     }
                                 }>Pay on delivery</button> : null}
                                 {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}

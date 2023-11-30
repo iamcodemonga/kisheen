@@ -1,10 +1,15 @@
 "use client"
 
-import { TCartItem, TMeal } from '@/types'
+import { TCartItem, TMeal, TOrder, TPaystackTransactionProps } from '@/types'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import EmptyCart from '../EmptyCart'
 import MockCartList from '../loaders/MockCartList'
+import { useRouter } from 'next/navigation'
+import { usePaystackPayment } from 'react-paystack'
+import axios from 'axios'
+import { toast } from 'react-toastify'
+import OrderLoader from '../loaders/OrderLoader'
 
 const CartCheckoutForm = () => {
 
@@ -13,6 +18,7 @@ const CartCheckoutForm = () => {
     const amount = useSelector((state: { cart: { amount: number }}) => state.cart.amount);
     const pending = useSelector((state: { cart: { loading: boolean }}) => state.cart.loading);
 
+    const router = useRouter();
     const vat: number = 800;
     const districtList = [ 'Enugu central', 'Enugu north', 'Enugu east', 'Nkanu east', 'Nkanu west', 'Nsukka' ]
 
@@ -24,7 +30,97 @@ const CartCheckoutForm = () => {
 
     // react states
     const [ fee, setFee ] = useState<number>(1000);
+    const [ loading, setLoading ] = useState<boolean>(false)
+
+    // controlled inputs
+    const [ customerName, setCustomerName ] = useState<string>('')
+    const [ email, setEmail ] = useState<string>('')
+    const [ orderType, setOrderType ] = useState<string>('home')
+    const [ country, setCountry ] = useState<string>('nigeria')
+    const [ state, setState ] = useState<string>('enugu')
     const [ district, setDistrict ] = useState<string>('Enugu central')
+    const [ address, setAddress ] = useState<string>('')
+    const [ tel, setTel ] = useState<string>('')
+
+    // handle Fuctions
+    const config = {
+        name: customerName,
+        email,
+        country,
+        state,
+        district,
+        address,
+        tel,
+        amount: ((amount*0.63)+fee+vat)*100,
+        publicKey: `${process.env.NEXT_PUBLIC_PAYSTACK_PK}`,
+    }
+
+    const initializePayment = usePaystackPayment(config);
+
+    const generateReceipt = () => {
+        const timeStamp = new Date().getTime();
+        const randomNum = Math.floor(Math.random() * 1000000000)
+        const uniqueId = timeStamp.toString() + randomNum.toString();
+        return uniqueId.slice(0, 10)
+    }
+
+    const receipt = generateReceipt();
+
+    const handleOrder = async(method: string, materials: any, receipt?: string) => {
+        setLoading(true)
+        try {
+            const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
+            if(data.status == "ok") {
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt, delivery: orderType });
+                if (response.status == "ok") {
+                    toast.success(`${response?.message}`, {
+                        position: "bottom-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                    setLoading(false);
+                    router.push('/thanks');
+                    return;
+                }
+                setLoading(false);
+                return;
+            }
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false)
+        return;
+    }
+
+    const onSuccess = (transaction?: TPaystackTransactionProps) => {
+        if (transaction?.message == "Approved" && transaction?.status == "success") {
+            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", customerName, email, method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
+            });
+            handleOrder('card', properties, receipt)
+            return;
+        }
+        console.log("payment went wrong")
+        return;
+    };
+
+    const onClose = () => {
+        toast.error(`Payment process has closed!`, {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+        return;
+    };
 
     // handle Fuctions
     const handleDistrict = (value: string) => {
@@ -50,26 +146,228 @@ const CartCheckoutForm = () => {
         return;
     }
 
+    const handleCardCheckout= async() => {
+
+        let nameRegex = /^([a-zA-Z ]+)$/;
+        let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
+        let telRegex = /^([0-9]{5,18})$/;
+
+        // check for empty input forms
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+            toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(orderType == "home" && address.trim() == "") {
+            toast.error(`Fill in your address information!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid customer name format
+        if(!nameRegex.test(customerName)) {
+            toast.error(`Name must only contain alphabets!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid email format
+        if(!emailRegex.test(email)) {
+            toast.error(`Email format is invalid!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(!telRegex.test(tel)) {
+            toast.error(`Phone number must only contain numbers!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        initializePayment(onSuccess, onClose)
+        return;
+    }
+
+    const handleFreeCheckout = async(refno: string) => {
+
+        let nameRegex = /^([a-zA-Z ]+)$/;
+        let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
+        let telRegex = /^([0-9]{5,18})$/;
+
+        // check for empty input forms
+        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+            toast.error(`Please fill in all fields!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(orderType == "home" && address.trim() == "") {
+            toast.error(`Fill in your address information!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid customer name format
+        if(!nameRegex.test(customerName)) {
+            toast.error(`Name must only contain alphabets!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // check for invalid email format
+        if(!emailRegex.test(email)) {
+            toast.error(`Email format is invalid!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        if(!telRegex.test(tel)) {
+            toast.error(`Phone number must only contain numbers!`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            return;
+        }
+
+        // console.log(properties);
+        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", customerName, email, method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
+        });
+
+        console.log(properties)
+        handleOrder('cash', properties, refno);
+        return;
+    }
+
+    const handleMethod = async(value: string) => {
+        if (value == "home") {
+            setOrderType(value);
+            setFee(1000);
+            return;
+        }
+        setOrderType(value);
+        setFee(0);
+        return;
+    }
+
     return (
         <section className='container mt-20'>
-            <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0'>
+            {loading ? <OrderLoader pending={loading} /> : null}
+            <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0' onSubmit={(e) => e.preventDefault()}>
                 <div className='col-span-6'>
                     <div className='space-y-5'>
                         <h5 className='font-bold text-xl'>Personal details</h5>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="name" className='text-accent'>Name</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' />
+                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="email" className='text-accent'>Email</label>
-                            <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' />
+                            <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                     </div>
                     <div className='space-y-5'>
                         <h5 className='font-bold mt-10 text-xl'>Address Informations</h5>
+                        <div className='hidden flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="country" className='text-accent'>Country</label>
+                            <select name="country" id="country" className='bg-transparent outline-none' value={country} onChange={(e) => setCountry(e.target.value)}>
+                                <option value="nigeria">Nigeria</option>
+                                <option value="ghana" disabled>Ghana</option>
+                                <option value="UAE" disabled>United Arab Emirates</option>
+                                <option value="canada" disabled>Canada</option>
+                                <option value="USA" disabled>United states of America</option>
+                                <option value="UK" disabled>United kingdom</option>
+                                <option value="SA" disabled>South Africa</option>
+                            </select>
+                        </div>
+                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="ordertype" className='text-accent'>Order type</label>
+                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => handleMethod(e.target.value)}>
+                                <option value="home" style={{ padding: '200px'}}>Home delivery</option>
+                                <option value="pickup">Shop pickup</option>
+                            </select>
+                        </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="state" className='text-accent'>State</label>
-                            <select name="state" id="state" className='bg-transparent outline-none'>
+                            <select name="state" id="state" className='bg-transparent outline-none' value={state} onChange={(e) => setState(e.target.value)}>
                                 <option value="enugu">Enugu</option>
                                 <option value="anambra" disabled>Anambra</option>
                                 <option value="portharcourt" disabled>Port Harcourt</option>
@@ -79,26 +377,26 @@ const CartCheckoutForm = () => {
                                 <option value="abuja" disabled>Abuja</option>
                             </select>
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="subject" className='text-accent'>District</label>
                             <select name="" id="subject" className='bg-transparent outline-none' value={district} onChange={(e) => handleDistrict(e.target.value)}>
-                                {districtList.length > 0 ? districtList.map((area) => <option value={area}>{area}</option>) : null}
+                                {districtList.length > 0 ? districtList.map((area, index) => <option value={area} key={index}>{area}</option>) : null}
                             </select>
-                        </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                        </div>: null}
+                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="address" className='text-accent'>Address line</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' />
-                        </div>
+                            <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' value={address} onChange={(e) => setAddress(e.target.value)} />
+                        </div> : null}
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="phone" className='text-accent'>Phone number</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="phone" placeholder='Add your phone number' />
+                            <input className='bg-transparent outline-none' type="tel" name="" id="phone" placeholder='Add your phone number' value={tel} onChange={(e) => setTel(e.target.value)} />
                         </div>
                     </div>
                 </div>
                 <div className='col-span-4'>
                     <h5 className='mb-8 font-bold text-xl'>Ordered Meal</h5>
                     <div className='space-y-5'>
-                        {!pending ? items.length > 0 ? items.map((item: TCartItem) => <div className='space-y-2'>
+                        {!pending ? items.length > 0 ? items.map((item: TCartItem, index: number) => <div className='space-y-2' key={index}>
                             <div className='flex items-center mb-0'>
                                 <img className='object-cover w-12 h-12 md:w-12 md:h-12 rounded-lg'  src={item.photo} alt="cart-image" />
                                 <div className='ml-5'>
@@ -124,7 +422,7 @@ const CartCheckoutForm = () => {
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
                                 <p className=''>Subtotal <strong className='text-green-600'>(37% off)</strong></p>
-                                {<p>&#8358;{(amount*0.63)}</p>}
+                                <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{amount}</span><span className='text-green-600'>&#8358;{(amount*0.63)}</span></p>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <p className=''>Delivery fee</p>
@@ -139,8 +437,9 @@ const CartCheckoutForm = () => {
                                 <p>&#8358;{(amount*0.63)+fee+vat}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white'>Pay with card</button>
-                                <button type="button" className='w-full py-3 bg-accent font-bold'>Pay on delivery</button>
+                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={handleCardCheckout}>Pay with card</button>
+                                {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => handleFreeCheckout(receipt)}>Pay on delivery</button> : null}
+                                {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}
                             </div>
                         </div>
                     </div> : null : null }

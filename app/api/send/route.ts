@@ -7,7 +7,7 @@ const resend:Resend = new Resend(process.env.RESEND_APIKEY);
 
 export async function POST(req: NextRequest) {
     const { searchParams } = new URL(req.url);
-    const { name: username, email, receipt }: { name: string, email: string, receipt: string } = await req.json();
+    const { name: username, email, receipt, delivery }: { name: string, email: string, receipt: string, delivery: string } = await req.json();
 
     const orderMail = async(name: string, email: string, subject: string) => {
         try {
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
                 from: 'thekitcheen <thekitcheen@codemonga.com>',
                 to: [email],
                 subject,
-                react: EmailOrderTemplate({ name, receipt }) as ReactElement,
+                react: EmailOrderTemplate({ name, receipt, delivery }) as ReactElement,
             });
             console.log(data)
             if (error) {
