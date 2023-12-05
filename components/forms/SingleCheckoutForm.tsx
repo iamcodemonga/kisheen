@@ -35,7 +35,8 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
     const [ loading, setLoading ] = useState<boolean>(false)
 
     // controlled inputs
-    const [ customerName, setCustomerName ] = useState<string>('')
+    const [ firstName, setFirstName ] = useState<string>('')
+    const [ lastName, setLastName ] = useState<string>('')
     const [ email, setEmail ] = useState<string>('')
     const [ orderType, setOrderType ] = useState<string>('home')
     const [ country, setCountry ] = useState<string>('nigeria')
@@ -45,7 +46,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
     const [ tel, setTel ] = useState<string>('')
 
     const config = {
-        name: customerName,
+        name: `${firstName} ${lastName}`,
         email,
         country,
         state,
@@ -72,7 +73,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         try {
             const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
             if(data.status == "ok") {
-                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt, delivery: orderType });
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstName, email: email.toLowerCase(), receipt, delivery: orderType });
                 if (response.status == "ok") {
                     toast.success(`${response?.message}`, {
                         position: "bottom-right",
@@ -99,7 +100,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            handleOrder('card', [{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
+            handleOrder('card', [{ receipt: receipt, mealId: item.id, photo: item.photo.url, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
             return;
         }
         console.log("payment went wrong")
@@ -142,7 +143,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstName.trim() == "" || lastName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -171,7 +172,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(customerName)) {
+        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -225,7 +226,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstName.trim() == "" || lastName.trim() == "" ||  email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -254,7 +255,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(customerName)) {
+        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -320,8 +321,12 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                     <div className='space-y-5'>
                         <h5 className='font-bold text-xl'>Personal details</h5>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="name" className='text-accent'>Name</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                            <label htmlFor="firstname" className='text-accent'>First name</label>
+                            <input className='bg-transparent outline-none' type="text" name="firstname" id="firstname" placeholder='Input your first name' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        </div>
+                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="lastname" className='text-accent'>Surname</label>
+                            <input className='bg-transparent outline-none' type="text" name="lastname" id="lastname" placeholder='Input your surname' value={lastName} onChange={(e) => setLastName(e.target.value)} />
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="email" className='text-accent'>Email</label>
@@ -445,12 +450,12 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices }: TProps) => {
                                 <p>&#8358;{item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
+                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, photo: item.photo.url, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>
                                 {/* <button type="button" className='w-full py-3 bg-accent font-bold' onClick={() => handleCheckout({ mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName: "Emmanuel ufot", email: "eufot30@gmail.com", tel: "", country: "Nigeria", state: "enugu", district: "enugu north", address: "presidential rd", quantity: Number(qty), amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat})}>Pay on delivery</button> */}
                                 {/* <PaystackButton className='w-full py-3 bg-blue-950 font-bold text-white' {...paymentProps} /> */}
                                 {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => {
                                         e.preventDefault(); 
-                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, customerName, email, method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: false, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
+                                        handleFreeCheckout([{ receipt: receipt, mealId: item.id, photo: item.photo.url, customerId: null, name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType,tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: false, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}], receipt)
                                     }
                                 }>Pay on delivery</button> : null}
                                 {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}

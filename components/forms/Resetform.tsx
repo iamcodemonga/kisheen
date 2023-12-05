@@ -3,26 +3,25 @@ import Link from 'next/link'
 
 const Resetform = () => {
     return (
-        <form className='max-w-sm md:max-w-md px-6 pb-6 pt-12 md:bg-primary/20 md:backdrop-blur-lg absolute rounded-lg brightness-75'>
+        <form className='max-w-sm md:max-w-md px-6 md:pt-14 md:pb-14 md:bg-primary/20 md:backdrop-blur-lg absolute rounded-lg md:brightness-75 mt-16 md:mt-0'>
             <div>
-                <h6 className='font-extrabold text-accent'>RESET YOUR PASSWORD!</h6>
-                <p className='text-primary/70 mt-3'>Always remember to keep your password private!</p>
-                <div className='flex flex-col mb-8'>
+                <h6 className='font-extrabold text-primary text-base mb-5 leading-relaxed'><strong className='text-accent'>REMEMBER</strong> TO ALWAYS KEEP YOUR PASSWORD PRIVATE AT ALL TIME!</h6>
+                <div className='flex flex-col mb-5'>
                     <div className='flex items-center justify-between pr-2'>
-                        <label htmlFor="new" className='text-accent'>New Password</label>
-                        <button type='button' className='text-primary'>show</button>
+                        <label htmlFor="newpassword" className='text-white text-sm mb-1'>New password</label>
+                        <button type='button' className='text-primary font-black'>show</button>
                     </div>
-                    <input type="password" className='px-3 py-2 border-2 border-primary rounded-lg text-primary bg-transparent outline-none' name="new" id="new" placeholder='xxxxxxxxxxxxxx' />
+                    <input type="password" className='px-3 py-2 border-2 border-primary rounded-lg text-primary bg-transparent outline-none' name="newpassword" id="newpassword" placeholder='xxxxxxxxxxxxxx' />
                 </div>
-                <div className='flex flex-col mb-8'>
+                <div className='flex flex-col mb-7'>
                     <div className='flex items-center justify-between pr-2'>
-                        <label htmlFor="confirm" className='text-accent'>Confirm Password</label>
-                        <button type='button' className='text-primary'>show</button>
+                        <label htmlFor="confirmpassword" className='text-white text-sm mb-1'>Confirm password</label>
+                        <button type='button' className='text-primary font-black'>show</button>
                     </div>
-                    <input type="password" className='px-3 py-2 border-2 border-primary rounded-lg text-primary bg-transparent outline-none' name="confirm" id="confirm" placeholder='xxxxxxxxxxxxxx' />
+                    <input type="password" className='px-3 py-2 border-2 border-primary rounded-lg text-primary bg-transparent outline-none' name="confirmpassword" id="confirmpassword" placeholder='xxxxxxxxxxxxxx' />
                 </div>
-                <button type="submit" className='w-full bg-accent py-3 rounded-lg text-lg font-bold mb-6'>submit</button>
-                <p className='text-primary'>Don't have an account? <Link className='text-accent font-bold' href='/register'>Create account now!</Link></p>
+                <button type="submit" className='w-full bg-accent py-3 rounded-lg text-lg font-bold mb-3'>submit</button>
+                {/* <p className='text-primary text-xs text-end'>Forgot password? <Link className='text-accent font-bold' href='/forgotpassword'>click here</Link></p> */}
             </div>
         </form>
     )

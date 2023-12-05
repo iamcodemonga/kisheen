@@ -17,13 +17,13 @@ const Authbar = () => {
                     </svg>
                     <span>Back</span>
                 </button>
-                {pathname.startsWith('/login') && <div className='space-x-4'>
-                    <Link className={pathname.startsWith('/login') ? 'bg-accent px-6 py-2 rounded-full font-bold text-base' : 'bg-primary/30 backdrop-blur-md px-6 py-2 rounded-full text-base'} href="/login">Login</Link>
-                    <Link className={pathname.startsWith('/register') ? 'bg-accent px-6 py-2 rounded-full font-bold text-base' : 'bg-primary/30 backdrop-blur-md px-6 py-2 rounded-full text-base'} href="/register">Register</Link>
+                {pathname.startsWith('/login') && <div className='space-x-2'>
+                    <Link className={pathname.startsWith('/login') ? 'bg-accent cursor-not-allowed px-6 py-3 rounded-full font-black text-base' : 'tracking-wider hover:underline px-3 py-2 text-white rounded-full text-base'} href="/login">Login</Link>
+                    <Link className={pathname.startsWith('/register') ? 'bg-accent cursor-not-allowed px-6 py-3 rounded-full font-black text-base' : 'tracking-wider hover:underline px-3 py-2 text-white rounded-full text-base'} href="/register">Register</Link>
                 </div>}
-                {pathname.startsWith('/register') && <div className='space-x-4'>
-                    <Link className={pathname.startsWith('/login') ? 'bg-accent px-6 py-2 rounded-full font-bold text-base' : 'bg-primary/30 backdrop-blur-md px-6 py-2 rounded-full text-base'} href="/login">Login</Link>
-                    <Link className={pathname.startsWith('/register') ? 'bg-accent px-6 py-2 rounded-full font-bold text-base' : 'bg-primary/30 backdrop-blur-md px-6 py-2 rounded-full text-base'} href="/register">Register</Link>
+                {pathname.startsWith('/register') && <div className='space-x-2'>
+                    <Link className={pathname.startsWith('/login') ? 'bg-accent cursor-not-allowed px-6 py-3 rounded-full font-black text-base' : 'tracking-wider hover:underline px-3 py-2 text-white rounded-full text-base'} href="/login">Login</Link>
+                    <Link className={pathname.startsWith('/register') ? 'bg-accent cursor-not-allowed px-6 py-3 rounded-full font-black text-base' : 'tracking-wider hover:underline px-3 py-2 text-white rounded-full text-base'} href="/register">Register</Link>
                 </div>}
             </nav>
     )

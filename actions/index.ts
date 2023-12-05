@@ -1,5 +1,5 @@
 import { GraphQLClient, gql } from "graphql-request"
-import { TMeal, TOrder } from "@/types"
+import { TMeal, TOrder, TUser } from "@/types"
 
 const key = process.env.NEXT_PUBLIC_API_KEY;
 const bearer = process.env.NEXT_PUBLIC_GRAPH_BEARER;
@@ -248,11 +248,13 @@ export const CreateOrder = async(order: TOrder) => {
           mealId: "${order.mealId}",
           ${order.customerId != null ? `customerId: "${order.customerId}"` : ""},
           name: "${order.name}",
+          photo: "${order.photo}",
           combo: "${order.combo}",
           meat: "${order.meat}",
           method: "${order.method}",
           type: "${order.type}",
-          customerName: "${order.customerName}",
+          firstName: "${order.firstName}",
+          surname: "${order.surname}",
           email: "${order.email}",
           tel: "${order.tel}",
           country: "${order.country}",
@@ -286,4 +288,79 @@ export const VerifyOrder = async(id: string) => {
     const result: any = await hygraph.request(VERIFY);
     return result;
   // return result.meals;
+}
+
+export const CreateUser = async(user: TUser) => {
+  const MUTATE = gql`
+    mutation NewUser {
+      createCustomer(
+        data: {
+          firstName: "${user.firstName}",
+          lastName: "${user.lastName}",
+          email: "${user.email}",
+          password: "${user.password}",
+          role: "${user.role}"
+        }
+      ) {
+        id
+      }
+    }`;
+  const result: any = await hygraph.request(MUTATE);
+  return result.createCustomer;
+  // return result.meals;
+}
+
+export const VerifyUser = async(id: string) => {
+  const VERIFY = gql`
+    mutation VerifyUser {
+      publishCustomer(where: {id: "${id}"}) {
+        id
+      }
+    }`;
+
+    const result: any = await hygraph.request(VERIFY);
+    return result.publishCustomer;
+}
+
+export const GetUserById = async(id:string) => {
+  const QUERY = gql`
+    {
+      customer(where: {id: "${id}"}) {
+        id
+        firstName
+        lastName
+        email
+        role
+      }
+    }`;
+    const result:any = await hygraph.request(QUERY);
+    return result.customer;
+}
+
+export const EmailExists = async(email:string) => {
+  const QUERY = gql`
+    {
+      customers(where: {email: "${email}"}) {
+        id
+        firstName
+        email
+        password
+      }
+    }`;
+    const result:any = await hygraph.request(QUERY);
+    return result.customers;
+}
+
+export const ModifyPassword = async(id:string, password: string) => {
+  const QUERY = gql`
+    mutation MyMutation {
+      updateCustomer(
+        data: {password: "${password}"}
+        where: {id: "${id}"}
+      ) {
+        id
+      }
+    }`;
+    const result:any = await hygraph.request(QUERY);
+    return result.updateCustomer;
 }

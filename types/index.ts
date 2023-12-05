@@ -49,7 +49,8 @@ export type TOrder = {
     meat: string;
     type: string;
     method: string;
-    customerName: string;
+    firstName: string;
+    surname: string
     email: string;
     tel?: string;
     country?: string;
@@ -61,6 +62,18 @@ export type TOrder = {
     quantity: number;
     prepaid: boolean;
     amount: number;
+}
+
+export type TUser = {
+    id?: string;
+    image?: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    country?: string;
+    state?: string;
+    password?: string;
 }
 
 export type TPaystackTransactionProps = {

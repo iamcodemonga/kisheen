@@ -12,7 +12,7 @@ export async function POST(req: NextRequest) {
     const orderMail = async(name: string, email: string, subject: string) => {
         try {
             const { data, error } = await resend.emails.send({
-                from: 'thekitcheen <thekitcheen@codemonga.com>',
+                from: 'kisheen <kisheen@codemonga.com>',
                 to: [email],
                 subject,
                 react: EmailOrderTemplate({ name, receipt, delivery }) as ReactElement,

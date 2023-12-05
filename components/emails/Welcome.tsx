@@ -6,7 +6,7 @@ export const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
 <Html>
     <Head />
     <Preview>
-    The sales intelligence platform that helps you uncover qualified leads.
+     Enjoy quality delicacies from Nigeria's greatest restaurant today!
     </Preview>
     <Body style={main}>
     <Container style={container}>
@@ -19,8 +19,7 @@ export const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
         />
         <Text style={paragraph}>Hi {name},</Text>
         <Text style={paragraph}>
-        Welcome to Koala, the sales intelligence platform that helps you
-        uncover qualified leads and close deals faster.
+        Welcome to Kisheen, We are Nigeria's biggest food commerce company whose only goal is to provide quality delicacies to people who value good and quality meals across Nigeria.
         </Text>
         <Text style={paragraph}>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Id, ullam voluptates earum beatae voluptatem, animi, doloremque facilis in tempore velit dolores? Repellat ex labore laborum ipsum dicta sint soluta. Laudantium.
@@ -31,7 +30,7 @@ export const WelcomeEmail = ({ name }: WelcomeEmailProps) => (
         <Text style={paragraph}>
         Best,
         <br />
-        The Koala team
+        The Kisheen team
         </Text>
         <Hr style={hr} />
         <Text style={footer}>408 Warren Rd - San Mateo, CA 94402</Text>

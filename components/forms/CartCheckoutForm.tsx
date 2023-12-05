@@ -33,7 +33,8 @@ const CartCheckoutForm = () => {
     const [ loading, setLoading ] = useState<boolean>(false)
 
     // controlled inputs
-    const [ customerName, setCustomerName ] = useState<string>('')
+    const [ firstName, setFirstName ] = useState<string>('')
+    const [ lastName, setLastName ] = useState<string>('')
     const [ email, setEmail ] = useState<string>('')
     const [ orderType, setOrderType ] = useState<string>('home')
     const [ country, setCountry ] = useState<string>('nigeria')
@@ -44,7 +45,7 @@ const CartCheckoutForm = () => {
 
     // handle Fuctions
     const config = {
-        name: customerName,
+        name: `${firstName} ${lastName}`,
         email,
         country,
         state,
@@ -71,7 +72,7 @@ const CartCheckoutForm = () => {
         try {
             const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
             if(data.status == "ok") {
-                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: customerName, email, receipt, delivery: orderType });
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstName, email, receipt, delivery: orderType });
                 if (response.status == "ok") {
                     toast.success(`${response?.message}`, {
                         position: "bottom-right",
@@ -99,7 +100,7 @@ const CartCheckoutForm = () => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", customerName, email, method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
+            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
             });
             handleOrder('card', properties, receipt)
             return;
@@ -153,7 +154,7 @@ const CartCheckoutForm = () => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstName.trim() == "" || lastName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -182,7 +183,7 @@ const CartCheckoutForm = () => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(customerName)) {
+        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -236,7 +237,7 @@ const CartCheckoutForm = () => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(customerName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstName.trim() == "" || lastName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -265,7 +266,7 @@ const CartCheckoutForm = () => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(customerName)) {
+        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -309,7 +310,7 @@ const CartCheckoutForm = () => {
         }
 
         // console.log(properties);
-        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", customerName, email, method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
+        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
         });
 
         console.log(properties)
@@ -336,8 +337,12 @@ const CartCheckoutForm = () => {
                     <div className='space-y-5'>
                         <h5 className='font-bold text-xl'>Personal details</h5>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="name" className='text-accent'>Name</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="name" placeholder='Input your fullname' value={customerName} onChange={(e) => setCustomerName(e.target.value)} />
+                            <label htmlFor="firstname" className='text-accent'>First name</label>
+                            <input className='bg-transparent outline-none' type="text" name="firstname" id="firstname" placeholder='Input your first name' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        </div>
+                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
+                            <label htmlFor="lastname" className='text-accent'>Surname</label>
+                            <input className='bg-transparent outline-none' type="text" name="lastname" id="lastname" placeholder='Input your surname' value={lastName} onChange={(e) => setLastName(e.target.value)} />
                         </div>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="email" className='text-accent'>Email</label>
