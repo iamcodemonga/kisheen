@@ -91,7 +91,7 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
                 <Image className='w-full object-cover rounded-lg' src={food.photo.url} alt="meal_picture" height={500} width={400} priority />
             </div>
             <div className="col-span-2 lg:col-span-1">
-                <h3 className='my-0 text-5xl font-bold'>{food.title}</h3>
+                <h1 className='my-0 text-2xl md:text-4xl font-bold'>{food.title}</h1>
                 <h5 className='space-x-3 my-5'>
                     <span className={food.type == 'pot' ? 'text-green-700' : 'text-red-700 line-through' }>&#8358;{amount.toLocaleString()}</span>
                     <span className={food.type == 'pot' ? 'text-green-700 hidden' : 'text-green-700'}>&#8358;{(amount*(1-0.37)).toLocaleString()}</span></h5>

@@ -3,6 +3,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { TCartItem } from "@/types";
+import { playAudio } from "@/lib/graphcms";
 
 type TInitState = {
     items: TCartItem[];
@@ -97,6 +98,7 @@ const cartSlice = createSlice({
             localStorage.setItem("items", JSON.stringify(state.items))
             localStorage.setItem("total", JSON.stringify(state.amount))
             localStorage.setItem("quantity", JSON.stringify(state.quantity))
+            playAudio('/livechat.mp3')
         },
         addToCart(state, action: { payload: TCartItem, type: string }) {
             const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
@@ -135,6 +137,7 @@ const cartSlice = createSlice({
             localStorage.setItem("items", JSON.stringify(state.items))
             localStorage.setItem("total", JSON.stringify(state.amount))
             localStorage.setItem("quantity", JSON.stringify(state.quantity))
+            playAudio('/livechat.mp3')
         },
         changeCombo(state, action: { payload: TCartItem, type: string }) {
             const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
@@ -155,6 +158,7 @@ const cartSlice = createSlice({
                 return;
             }
             localStorage.setItem("items", JSON.stringify(state.items));
+            playAudio('/livechat.mp3')
         },
         changeMeat(state, action: { payload: TCartItem, type: string }) {
             const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
@@ -175,6 +179,7 @@ const cartSlice = createSlice({
                 return;
             }
             localStorage.setItem("items", JSON.stringify(state.items));
+            playAudio('/livechat.mp3')
         },
         removeFromCart(state, action: { payload: TCartItem, type: string }) {
             const itemIndex = state.items.findIndex(item => item.id === action.payload.id)
@@ -191,6 +196,7 @@ const cartSlice = createSlice({
                     progress: undefined,
                     theme: "colored",
                 });
+                playAudio('/fwoosh.mp3')
             } else {
                 (state.items[itemIndex].cartQty as number) -= 1;
                 cartItems = [...state.items ]
@@ -222,6 +228,7 @@ const cartSlice = createSlice({
                     progress: undefined,
                     theme: "colored",
                 });
+                playAudio('/fwoosh.mp3')
         },
         clearCart(state, action) {
             state.items = [];

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (searchParams.get('type') == 'order') {
-        orderMail(username, email, 'Order successful');
+        await orderMail(username, email, 'Order successful');
         return NextResponse.json({ status: "ok", message: `${searchParams.get('method') == 'cash' ? "Order sent! to be paid on delivery" : "Card payment successful!"}`});
     }
 

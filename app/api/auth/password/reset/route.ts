@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { EmailExists, ModifyPassword, VerifyUser } from "@/actions";
+import { EmailExists, ModifyPassword, VerifyUser } from "@/lib/graphcms";
 import bcrypt from "bcrypt"
 
 

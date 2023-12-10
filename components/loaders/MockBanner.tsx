@@ -4,7 +4,7 @@ const MockBanner = () => {
     return (
         <header className='relative w-full overflow-hidden bg-slate-300/50' style={{ height: '100vh'}}>
           {/* <div className='w-full h-full bg-black opacity-60 absolute top-0 left-0'></div> */}
-          <div className='absolute bottom-0 left-0 w-full md:w-2/5 px-4 mb-16 md:mb-24 lg:mb-32 lg:ml-20' >
+          <div className='absolute bottom-0 left-0 w-full md:w-2/5 px-4 mb-24 md:mb-24 lg:mb-32 lg:ml-20' >
               <div className='text-accent font-bold uppercase w-40 h-5 bg-slate-50 rounded-2xl'></div>
               <div className='text-accent font-bold uppercase w-full mt-6 h-8 bg-slate-50 rounded-2xl'></div>
               <div className='text-accent font-bold uppercase w-full mt-6 h-8 bg-slate-50 rounded-2xl'></div>

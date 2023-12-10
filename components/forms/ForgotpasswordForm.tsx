@@ -92,7 +92,7 @@ const ForgotpasswordForm = () => {
         <form className='max-w-sm md:max-w-md px-6 pb-8 pt-12 md:bg-primary/20 md:backdrop-blur-lg absolute rounded-lg brightness-75' onSubmit={(e) => handleSubmit(e)}>
             <div>
                 <h6 className='font-extrabold text-accent text-2xl'>FORGOT PASSWORD?</h6>
-                <p className='text-gray-300 mt-2 mb-6 leading-normal'>On receiving your email address, we will send a password reset link to you via E-mail!</p>
+                <p className='text-gray-300 mt-2 mb-6 leading-normal'>We will generate and send new password this e-mail, change the password as soon as you log into your dashboard!</p>
                 <div className='flex flex-col mb-6'>
                     <label htmlFor="email" className='text-primary text-sm mb-1'>Email address</label>
                     <input type="email" className='px-3 py-2 border-2 border-primary rounded-lg text-primary bg-transparent outline-none' name="email" id="email" placeholder='e.g johndoe@gmail.com' value={email} onChange={(e) => setEmail(e.target.value)} />

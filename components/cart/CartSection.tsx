@@ -5,33 +5,27 @@ import Link from 'next/link'
 import MockTray from '@/components/loaders/MockTray'
 import { useDispatch, useSelector } from 'react-redux'
 import EmptyCart from '@/components/EmptyCart'
-import Navbar from '@/components/bars/Navbar'
 import { TCartItem } from '@/types'
 import { addToCart, changeCombo, changeMeat, deleteMeal, initializeCart, removeFromCart } from '@/features/cartSlice'
-import MockCartList from '@/components/loaders/MockCartList'
 import MockCartSummary from '@/components/loaders/MockCartSummary'
+import MockCartList from '../loaders/MockCartList'
 
-interface ProductProps {
-    image: string,
-    name: string,
-    price: number,
-    quantity: number,
-    combo: string,
-    meat: string
+type TUserProps = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    password?: string;
 }
 
-const FoodTray = () => {
+const CartSection = () => {
 
     const [ active, setActive ] = useState<number[]>([])
     const dispatch = useDispatch();
     const items = useSelector((state: { cart: { items: TCartItem[] }}) => state.cart.items);
     const amount = useSelector((state: { cart: { amount: number }}) => state.cart.amount);
     const pending = useSelector((state: { cart: { loading: boolean }}) => state.cart.loading);
-
-    // to be done during cart development
-    const [ quantity, setQuantity ] = useState<number>(1)
-    const [ combo, setCombo ] = useState('garri')
-    const [ meat, setMeat ] = useState('beef')
 
     const handleOptions = (index: number) => {
         if(active.includes(index)) {
@@ -67,18 +61,12 @@ const FoodTray = () => {
         return;
     }
 
-    // useEffect(() => {
-    //     dispatch(initializeCart())
-    // }, [])
-
     return (
-        <>
-            <Navbar />
-            <section className='container py-10 lg:py-12 mt-0 overflow-x-hidde hidde'>
-                <h3 className='mt-0 font-black text-5xl mb-3 lg:mb-5'>FOOD CART</h3>
+        <section className='container py-10 lg:py-12 mt-0 overflow-x-hidde hidde'>
+                <h3 className='mt-0 font-black text-2xl md:text-4xl mb-5 lg:mb-5'>FOOD CART ({ items.length })</h3>
                 <div className='xl:grid grid-cols-6 lg:gap-x-32 gap-y-5 hidde'>
                     <div className='col-span-6 lg:col-span-4'>
-                        {!pending ? items.length >= 1 ? items.map((meal: TCartItem, index: number) => <div className='border-b-2 md:pb-8 mb-6 w-full'>
+                        {!pending ? items.length >= 1 ? items.map((meal: TCartItem, index: number) => <div className='border-b-2 md:pb-8 mb-6 w-full' key={index}>
                             <div className='flex gap-x-5 overflow-x-hidde w-full'>
                                 <img className='object-cover w-12 h-12 md:w-20 md:h-20 mt-5 rounded-lg'  src={meal.photo} alt="cart-image" />
                                 <div className='w-full'>
@@ -177,8 +165,7 @@ const FoodTray = () => {
                     </div>
                 </div>
             </section>
-        </>
     )
 }
 
-export default FoodTray
+export default CartSection

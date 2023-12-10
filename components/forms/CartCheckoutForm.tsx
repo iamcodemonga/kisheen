@@ -1,8 +1,8 @@
 "use client"
 
-import { TCartItem, TMeal, TOrder, TPaystackTransactionProps } from '@/types'
+import { TCartItem, TPaystackTransactionProps } from '@/types'
 import { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import EmptyCart from '../EmptyCart'
 import MockCartList from '../loaders/MockCartList'
 import { useRouter } from 'next/navigation'
@@ -10,8 +10,18 @@ import { usePaystackPayment } from 'react-paystack'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import OrderLoader from '../loaders/OrderLoader'
+import { playAudio } from '@/lib/graphcms'
 
-const CartCheckoutForm = () => {
+type TUserProps = {
+    id: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+    role: string;
+    password?: string;
+}
+
+const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
 
     // const dispatch = useDispatch();
     const items = useSelector((state: { cart: { items: TCartItem[] }}) => state.cart.items)
@@ -33,9 +43,9 @@ const CartCheckoutForm = () => {
     const [ loading, setLoading ] = useState<boolean>(false)
 
     // controlled inputs
-    const [ firstName, setFirstName ] = useState<string>('')
-    const [ lastName, setLastName ] = useState<string>('')
-    const [ email, setEmail ] = useState<string>('')
+    const [ firstName, setFirstName ] = useState<string>(user ? user.firstName : '')
+    const [ lastName, setLastName ] = useState<string>(user ? user.lastName : '')
+    const [ email, setEmail ] = useState<string>(user ? user.email : '')
     const [ orderType, setOrderType ] = useState<string>('home')
     const [ country, setCountry ] = useState<string>('nigeria')
     const [ state, setState ] = useState<string>('enugu')
@@ -72,7 +82,7 @@ const CartCheckoutForm = () => {
         try {
             const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
             if(data.status == "ok") {
-                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstName, email, receipt, delivery: orderType });
+                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstName, email: email, receipt, delivery: orderType });
                 if (response.status == "ok") {
                     toast.success(`${response?.message}`, {
                         position: "bottom-right",
@@ -84,6 +94,7 @@ const CartCheckoutForm = () => {
                         progress: undefined,
                         theme: "colored",
                     });
+                    playAudio('/livechat.mp3')
                     setLoading(false);
                     router.push('/thanks');
                     return;
@@ -100,7 +111,7 @@ const CartCheckoutForm = () => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
+            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: (user ? user.id : null), name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
             });
             handleOrder('card', properties, receipt)
             return;
@@ -165,6 +176,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -179,6 +191,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -194,6 +207,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -209,6 +223,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -223,6 +238,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -248,6 +264,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -262,6 +279,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -277,6 +295,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -292,6 +311,7 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -306,11 +326,12 @@ const CartCheckoutForm = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
         // console.log(properties);
-        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: null, name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
+        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: (user ? user.id : null), name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
         });
 
         console.log(properties)
@@ -334,7 +355,7 @@ const CartCheckoutForm = () => {
             {loading ? <OrderLoader pending={loading} /> : null}
             <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0' onSubmit={(e) => e.preventDefault()}>
                 <div className='col-span-6'>
-                    <div className='space-y-5'>
+                    {!user ? <div className='space-y-5'>
                         <h5 className='font-bold text-xl'>Personal details</h5>
                         <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
                             <label htmlFor="firstname" className='text-accent'>First name</label>
@@ -348,7 +369,7 @@ const CartCheckoutForm = () => {
                             <label htmlFor="email" className='text-accent'>Email</label>
                             <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
-                    </div>
+                    </div> : null}
                     <div className='space-y-5'>
                         <h5 className='font-bold mt-10 text-xl'>Address Informations</h5>
                         <div className='hidden flex-col bg-gray-200 p-3 rounded-xl'>
@@ -399,7 +420,7 @@ const CartCheckoutForm = () => {
                     </div>
                 </div>
                 <div className='col-span-4'>
-                    <h5 className='mb-8 font-bold text-xl'>Ordered Meal</h5>
+                    <h5 className={user ? 'mb-8 font-bold text-xl lg:mt-10' : 'mb-8 font-bold text-xl'}>Ordered Meal</h5>
                     <div className='space-y-5'>
                         {!pending ? items.length > 0 ? items.map((item: TCartItem, index: number) => <div className='space-y-2' key={index}>
                             <div className='flex items-center mb-0'>

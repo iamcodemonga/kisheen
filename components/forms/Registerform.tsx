@@ -6,6 +6,8 @@ import { toast } from "react-toastify";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import BeatLoader from "react-spinners/BeatLoader";
+import { playAudio } from '@/lib/graphcms';
+import { signIn } from 'next-auth/react';
 
 const Registerform = () => {
 
@@ -35,6 +37,7 @@ const Registerform = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -49,6 +52,7 @@ const Registerform = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -63,6 +67,7 @@ const Registerform = () => {
                 progress: undefined,
                 theme: "colored",
             });
+            playAudio('/error.mp3')
             return;
         }
 
@@ -81,25 +86,35 @@ const Registerform = () => {
                     progress: undefined,
                     theme: "colored",
                 });
+                playAudio('/error.mp3')
                 setLoading(false)
                 return;
             }
              // send welcome mail message
-             const { data } = await axios.post(`/api/send/welcome`, { name: firstName, email });
-             console.log(data)
-             toast.success(`${data.message}`, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
+             const { data } = await axios.post(`/api/send/welcome`, { name: firstName, email: email });
+
+             const res = await signIn("credentials", {
+                email,
+                password,
+                redirect: false
             });
-            setLoading(false);
-            router.push('/dashboard');
-            return;
+
+            if (res?.ok) {
+                toast.success(`${data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                playAudio('/livechat.mp3')
+                setLoading(false);
+                router.push('/dashboard');
+                return;
+            }
 
         } catch (error) {
             console.log(error);

@@ -3,7 +3,7 @@ import React from 'react'
 const MockTray = () => {
     return (
         <section className='container py-10 lg:py-12 mt-0 overflow-x-hidde'>
-            <h3 className='mt-0 font-black text-5xl mb-5 lg:mb-5'>FOOD CART</h3>
+            <h3 className='mt-0 font-black text-2xl md:text-4xl mb-5 lg:mb-5'>FOOD CART</h3>
             <div className='xl:grid grid-cols-6 lg:gap-x-32 gap-y-5 pt-5'>
                 <div className='col-span-6 lg:col-span-4'>
                     {[1, 2, 3, 4, 5].map((product, index) => <div className='border-b-2 md:pb-8 mb-6 pb-6 w-full' key={index}>

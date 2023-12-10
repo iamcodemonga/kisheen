@@ -1,11 +1,6 @@
-import { CreateOrder, VerifyOrder } from "@/actions";
+import { CreateOrder, VerifyOrder } from "@/lib/graphcms";
 import { TOrder } from "@/types";
 import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
-import EmailOrderTemplate from "@/components/emails/Order";
-import { ReactElement } from "react";
-
-const resend:Resend = new Resend(process.env.RESEND_APIKEY);
 
 export async function POST(req: NextRequest) {
     const { searchParams } = new URL(req.url);
@@ -15,7 +10,7 @@ export async function POST(req: NextRequest) {
         try {
             await Promise.all(items.map(async(item: TOrder) => {
                 const order = await CreateOrder(item)
-                await VerifyOrder(order.createOrder.id)
+                await VerifyOrder(order.CreateOrder.id)
             }))
         } catch (error: unknown) {
             console.log(error)

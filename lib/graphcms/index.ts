@@ -343,6 +343,8 @@ export const EmailExists = async(email:string) => {
       customers(where: {email: "${email}"}) {
         id
         firstName
+        lastName
+        role
         email
         password
       }
@@ -363,4 +365,28 @@ export const ModifyPassword = async(id:string, password: string) => {
     }`;
     const result:any = await hygraph.request(QUERY);
     return result.updateCustomer;
+}
+
+export const MyOrders = async(email: string, limit: number, skip: number) => {
+  const QUERY = gql`
+  {
+    orders(where: {email: "${email}"}, first: ${limit}, skip: ${skip}) {
+      amount
+      name
+      pending
+      photo
+      receipt
+      customerId
+      email
+      quantity
+    }
+  }`;
+    const result:any = await hygraph.request(QUERY);
+    return result.orders;
+}
+
+export const playAudio = (file: string) => {
+  const audio = new Audio(file);
+  audio.volume = 0.2;
+  audio.play()
 }

@@ -6,10 +6,10 @@ const MockPots = () => {
             <section className='container w-full py-20'>
                 <div className='md:flex items-center justify-between mb-16'>
                     <h3 className='font-bold text-5xl md:text-5xl xl:text-9xl gap-x-5'>Pot Services</h3>
-                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10'> Ducimus, repudiandae perspiciatis ratione soluta ad molestiae tempora odio ut saepe quis voluptatem non suscipit, labore beatae! Dolorum sapiente cupiditate tempore. Ducimus.</p>
+                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10'> While you are focused on working hard and achieving your dreams, we are focused on taking from you the pressure of having to cook your meals by cooking and delivering full pot of delicious meals to your doorstep in less than 24 hours.</p>
                 </div>
                 <div className='grid md:grid-cols-2 gap-x-6 gap-y-12'>
-                    {[1, 2, 3, 4].map((meal:number, index:number) => <div className='pot-card relative overflow-hidden rounded-xl'>
+                    {[1, 2, 3, 4].map((meal:number, index:number) => <div className='pot-card relative overflow-hidden rounded-xl' key={index}>
                         <div className='w-full bg-slate-300/50 mock_pot_img'></div>
                         <span className='absolute top-0 left-0 rounded-tl-xl space-x-3 bg-slate-50 pt-2 pb-1 px-4 w-52 h-9'></span>
                         <div className='w-full absolute bottom-0 left-0 py-10 px-4'>
@@ -24,17 +24,17 @@ const MockPots = () => {
                     <div className=''>
                         <div className='block'><img src="food.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quality Meals</h1>
-                        <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
+                        <p className='text-center'>Nigerian delicacies cooked and served with no compromise on quality.</p>
                     </div>
                     <div className=''>
                         <div className="block"><img src="payment.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Flexible Payment</h1>
-                        <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
+                        <p className='text-center'>We offer a range of payment options including payment on delivery.</p>
                     </div>
                     <div className=''>
                         <div className="block"><img src="delivery.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quick Delivery</h1>
-                        <p className='text-center'>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Culpa, at?</p>
+                        <p className='text-center'>Fast, accurate and flexible delivery methods with a happy ending.</p>
                     </div>
                 </div>
             </section>

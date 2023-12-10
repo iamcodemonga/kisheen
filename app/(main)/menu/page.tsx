@@ -1,10 +1,16 @@
 import Menusection from '@/components/Menusection'
 import WhatsApp from '@/components/WhatsApp'
 import { redirect } from 'next/navigation'
-import { AllMeals, FilterdedMeals } from '@/actions'
+import { AllMeals, FilterdedMeals } from '@/lib/graphcms'
 import Navbar from '@/components/bars/Navbar'
 
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { getServerSession } from 'next-auth/next'
+import { EmailExists } from '@/lib/graphcms'
+
 const Menu = async({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+    const session = await getServerSession(authOptions)
+    const user = await EmailExists(session?.user?.email as string)
 
     let categories: string[] = [ 'soup', 'sauce', 'rice' ]
     let category :string = searchParams.category as string;
@@ -30,7 +36,7 @@ const Menu = async({ searchParams }: { searchParams: { [key: string]: string | s
         const filteredMeals = await FilterdedMeals(6, 0, min, max)
         return (
             <>
-                <Navbar />
+                <Navbar user={user[0]} />
                 <Menusection meals={filteredMeals} active={null} initialMinimumPrice={min} initialMaximumPrice={max} />
                 <WhatsApp />
             </>
@@ -44,7 +50,7 @@ const Menu = async({ searchParams }: { searchParams: { [key: string]: string | s
 
         return (
             <>
-                <Navbar />
+                <Navbar user={user[0]} />
                 <Menusection meals={meals} active={mealcategory} initialMinimumPrice={min} initialMaximumPrice={max} />
                 <WhatsApp />
             </>

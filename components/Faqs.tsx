@@ -5,24 +5,28 @@ const Faqs = () => {
 
     const [ QA, setQA ] = useState([
         {
-            question: "Question number one Question number one",
-            answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, commodi assumenda! Facilis laboriosam animi sunt dolorem, exercitationem aliquid nisi, quasi dicta, neque mollitia placeat iure odio. Corporis doloremque molestiae quisquam."
+            question: "Is kisheen a registered business?",
+            answer: "We are a registered business under the corporate affairs commission(CAC) with a CAC number CN44637171 and are currently operating in enugu state, Nigeria."
         },
         {
-            question: "Question number one Question number two",
-            answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, commodi assumenda! Facilis laboriosam animi sunt dolorem, exercitationem aliquid nisi, quasi dicta, neque mollitia placeat iure odio. Corporis doloremque molestiae quisquam."
+            question: "Where can I locate your shop?",
+            answer: "Our shop is located at No. 104 new heavens road, Enugu state. you can come and buy with us or order and get you package from the comfort of your home."
         },
         {
-            question: "Question number one Question number three",
-            answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, commodi assumenda! Facilis laboriosam animi sunt dolorem, exercitationem aliquid nisi, quasi dicta, neque mollitia placeat iure odio. Corporis doloremque molestiae quisquam."
+            question: "How long does it take to receive my orders?",
+            answer: "Our regular meals take somewhere from 15 - 30 minutes(considering busy roads and other factors) for your order to be delivered to your doorstep, but our pot services take within 5 - 24 hours."
         },
         {
-            question: "Question number one Question number four",
-            answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, commodi assumenda! Facilis laboriosam animi sunt dolorem, exercitationem aliquid nisi, quasi dicta, neque mollitia placeat iure odio. Corporis doloremque molestiae quisquam."
+            question: "Are deliveries available 24 hours everyday?",
+            answer: "Our shops open from 7am - 8pm but we only deliver orders from 9am - 7pm everyday. Nevertheless, we accept orders 24 hours everyday"
         },
         {
-            question: "Question number one Question number five",
-            answer: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa, commodi assumenda! Facilis laboriosam animi sunt dolorem, exercitationem aliquid nisi, quasi dicta, neque mollitia placeat iure odio. Corporis doloremque molestiae quisquam."
+            question: "Do you deliver everywhere or you have limited regions?",
+            answer: "Yes, We are currently based in enugu state and we deliver everywhere in enugu state. You can also order and pickup your deliveries in our shop if you wish."
+        },
+        {
+            question: "Do I have to register before placing an order?",
+            answer: "No, you don't need to register before placing your order(s) but it is adviceable to register so you can easily track and record your order(s) for accountability and issue resolution purposes."
         }
     ])
 

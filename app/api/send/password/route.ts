@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
         }
     }
 
-    passwordMail(email, `Your new password!`);
+    await passwordMail(email, `Your new password!`);
     return NextResponse.json({ status: "ok", message: `Successful, Check your email!`});
 }

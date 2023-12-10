@@ -1,4 +1,4 @@
-import { Meal } from '@/actions';
+import { Meal } from '@/lib/graphcms';
 import CheckoutBanner from '@/components/banners/CheckoutBanner'
 import Navbar from '@/components/bars/Navbar';
 import CheckoutForm from '@/components/forms/SingleCheckoutForm';
@@ -6,12 +6,18 @@ import { TMeal } from '@/types';
 import { redirect } from 'next/navigation';
 import React from 'react'
 
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { getServerSession } from 'next-auth/next'
+import { EmailExists } from '@/lib/graphcms'
+
 type Props = {
     params: { slug: string };
     searchParams: { [key: string]: string | string[] | undefined }
 }
 
 const SingleCheckout = async({ params, searchParams}: Props) => {
+    const session = await getServerSession(authOptions)
+    const user = await EmailExists(session?.user?.email as string)
 
     const item: TMeal = await Meal(params.slug);
     
@@ -59,9 +65,9 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
 
     return (
         <>
-            <Navbar />
+            <Navbar user={user[0]} />
             <CheckoutBanner meal={`${item.slug}`} />
-            <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} />
+            <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} user={user[0]} />
         </>
     )
 }

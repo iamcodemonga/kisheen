@@ -6,18 +6,24 @@ import Contact from '@/components/Contactsection'
 import WhatsApp from '@/components/WhatsApp'
 import Modal from '@/components/Modal'
 import Navbar from '@/components/bars/Navbar'
-import { FeaturedMeals } from '@/actions'
+import { FeaturedMeals } from '@/lib/graphcms'
 import { TMeal } from '@/types'
 
-export const revalidate = 10;
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { getServerSession } from 'next-auth/next'
+import { EmailExists } from '@/lib/graphcms'
+
+// export const revalidate = 10;
+export const dynamic = "force-dynamic";
 
 export default async function Home() {
-
   const meals: TMeal[]  = await FeaturedMeals();
+  const session = await getServerSession(authOptions)
+  const user = await EmailExists(session?.user?.email as string)
 
     return (
       <>
-        <Navbar />
+        <Navbar user={user[0]} />
         <Banner />
         <FeaturedMenu meals={meals} />
         <Potservices />

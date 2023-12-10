@@ -25,6 +25,6 @@ export async function POST(req: NextRequest) {
         }
     }
 
-    welcomeMail(firstname, email, `You are welcome, ${firstname}!`);
+    await welcomeMail(firstname, email, `You are welcome, ${firstname}!`);
     return NextResponse.json({ status: "ok", message: `Account created successfully!`});
 }

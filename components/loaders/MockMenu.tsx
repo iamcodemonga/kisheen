@@ -37,7 +37,7 @@ const MockMenu = () => {
                   </form>
                 </div>
                 <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 lg:gap-y-14'>
-                    {[1, 2, 3, 4, 5, 6].map((meal:number) => <div className='card w-full relative'>
+                    {[1, 2, 3, 4, 5, 6].map((meal:number, index: number) => <div className='card w-full relative' key={index}>
                         <div className='h-80 lg:h-80 w-full rounded-xl bg-slate-300/50'></div>
                         <div className='mb-1 mt-5 w-full h-6 rounded-full bg-slate-300/50'></div>
                         <div className='mb-1 mt-2 w-4/5 h-6 rounded-full bg-slate-300/50'></div>

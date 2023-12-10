@@ -21,7 +21,7 @@ const RecommendedMeals = ({ meals, type }: Props) => {
 
     return (
         <section className='container py-6 lg:pt-0 lg:pb-32 col-span-6 lg:col-span-5'>
-            <h3 className='mb-7 text-4xl md:text-5xl font-bold'>Similar Meals</h3>
+            <h2 className='mb-7 text-2xl md:text-3xl font-bold'>Similar Meals</h2>
             <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8 lg:gap-y-14'>
                 {meals && meals.map((meal:TMeal, index:number) => <div className='card w-full relative' key={meal.id}>
                     <Link href={`/meal/${meal.slug}`}>

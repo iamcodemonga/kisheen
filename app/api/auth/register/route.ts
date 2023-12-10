@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { CreateUser, EmailExists, VerifyUser } from "@/actions";
+import { CreateUser, EmailExists, VerifyUser } from "@/lib/graphcms";
 import bcrypt from "bcrypt"
-import Jwt from "jsonwebtoken";
 
 
 export async function POST(req:NextRequest){
     const { firstName, lastName, email, password, role } = await req.json();
-    const cookie = cookies();
     const exists = await EmailExists(email);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash( password, salt );
@@ -21,11 +18,8 @@ export async function POST(req:NextRequest){
         const user = await CreateUser({ firstName, lastName, email, password:hashedPassword, role });
         // verify user
         const verified = await VerifyUser(user.id);
-        // setcookie
         if (verified.id) {
-            const token = Jwt.sign({ id: verified.id }, String(process.env.JWT_secret) , { expiresIn: process.env.JWT_EXP});
-            cookie.set('kisheen', token, { path: "/", secure: true, httpOnly: true, maxAge: 2*24*60*60*1000 });
-            return NextResponse.json({ status: "ok", message: `account created successfully!`});
+            return NextResponse.json({ status: "ok", message: `Account successfully created!`})
         }
     } catch (error) {
         console.log(error)
