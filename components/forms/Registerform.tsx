@@ -92,24 +92,7 @@ const Registerform = () => {
             }
              // send welcome mail message
             const { data } = await axios.post(`/api/send/welcome`, { name: firstName, email: email });
-            if (data.status == "ok") {
-                toast.success(`${data.message}`, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
-                playAudio('/livechat.mp3');
-                setLoading(false);
-                router.push('/dashboard');
-                return;
-            }
-
-            toast.success(`${"Email not sent!"}`, {
+            toast.success(`${data.message}`, {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
