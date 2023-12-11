@@ -1,4 +1,3 @@
-import Footer from '@/components/Footer'
 import Navbar from '@/components/bars/Navbar'
 import Bio from '@/components/profile/Userheading'
 import Tab from '@/components/profile/Usersection'
@@ -16,7 +15,6 @@ const Dashboard = async() => {
             <Navbar user={user[0]}  />
             <Bio page='index' user={user[0]} />
             <Tab page='index' user={user[0]}/>
-            <Footer />
         </>
     )
 }
