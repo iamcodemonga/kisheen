@@ -52,42 +52,43 @@ const Loginform = () => {
 
         // send an axios request to check data validity, decrypt password and set cookie
         setLoading(true)
-        const res = await signIn("credentials", {
+        await signIn("credentials", {
             email,
-            password,
-            redirect: false
+            password
         });
 
-        if (res?.error) {
-            toast.error(`Email or Password is incorrect`, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-            playAudio('/error.mp3')
-            setLoading(false);
-            return;
-        }
-
-        toast.success(`Welcome back`, {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
-        playAudio('/livechat.mp3')
-        setLoading(false);
-        router.push('/dashboard');
         return;
+
+        // if (res?.error) {
+        //     toast.error(`Email or Password is incorrect`, {
+        //         position: "bottom-right",
+        //         autoClose: 5000,
+        //         hideProgressBar: false,
+        //         closeOnClick: true,
+        //         pauseOnHover: true,
+        //         draggable: true,
+        //         progress: undefined,
+        //         theme: "colored",
+        //     });
+        //     playAudio('/error.mp3')
+        //     setLoading(false);
+        //     return;
+        // }
+
+        // toast.success(`Welcome back`, {
+        //     position: "bottom-right",
+        //     autoClose: 5000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     theme: "colored",
+        // });
+        // playAudio('/livechat.mp3')
+        // setLoading(false);
+        // router.push('/dashboard');
+        // return;
     }
 
     return (

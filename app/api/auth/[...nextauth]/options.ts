@@ -12,29 +12,33 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                const exists = await EmailExists(credentials?.email as string);
+                const { email, password } = credentials as { email: string, password: string };
+                try {
+                    const exists = await EmailExists(email);
+                    if (exists.length < 1) {
+                        return null;
+                    }
 
-                if (exists.length < 1) {
-                    return null;
-                }
-
-                const match = await bcrypt.compare(credentials?.password as string, exists[0].password)
-
-                if (!match) {
-                    return null;
-                } else {
-                    const user = exists[0];
-                    return user;
+                    const match = await bcrypt.compare(password, exists[0].password)
+                    if (!match) {
+                        return null;
+                    } else {
+                        const user = exists[0];
+                        return user;
+                    }
+                } catch (error) {
+                    console.log(error)
                 }
             },
         })
     ],
     session: {
         strategy: "jwt",
-        maxAge: 90 * 24 * 60 * 60
+        maxAge: 30 * 24 * 60 * 60
     },
     secret: process.env.NEXTAUTH_SECRET,
     pages: {
-        signIn: "/login"
+        signIn: "/login",
+        newUser: "/dashboard"
     },
 }
