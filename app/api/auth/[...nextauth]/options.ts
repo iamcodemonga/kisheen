@@ -16,12 +16,12 @@ export const authOptions: NextAuthOptions = {
                 try {
                     const exists = await EmailExists(email);
                     if (exists.length < 1) {
-                        return null;
+                        throw new Error("User does not exist!");
                     }
 
                     const match = await bcrypt.compare(password, exists[0].password)
                     if (!match) {
-                        return null;
+                        throw new Error("Email and Password is incorrect!");
                     } else {
                         const user = exists[0];
                         return user;
