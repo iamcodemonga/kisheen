@@ -91,30 +91,22 @@ const Registerform = () => {
                 return;
             }
              // send welcome mail message
-             const { data } = await axios.post(`/api/send/welcome`, { name: firstName, email: email });
+            const { data } = await axios.post(`/api/send/welcome`, { name: firstName, email: email });
 
-             const res = await signIn("credentials", {
-                email,
-                password,
-                redirect: false
+            toast.success(`${data.message}`, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
             });
-
-            if (res?.ok) {
-                toast.success(`${data.message}`, {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
-                playAudio('/livechat.mp3')
-                setLoading(false);
-                router.push('/dashboard');
-                return;
-            }
+            playAudio('/livechat.mp3')
+            setLoading(false);
+            router.push('/login');
+            return;
 
         } catch (error) {
             console.log(error);
