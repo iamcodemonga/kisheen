@@ -38,17 +38,17 @@ const Sidebar: FC<status> = ({ open, handleClose, user }) => {
             </div>
             <ul className='space-y-10'>
                 <li><p className='text-center'><Link href="/" className={pathname == '/' ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>Home</Link></p></li>
-                <li><p className='text-center'><Link href="/menu" className={pathname.startsWith('/menu') ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>Food Menu</Link></p></li>
+                <li><p className='text-center'><Link href="/menu" className={pathname.startsWith('/menu') ? 'text-2xl font-extrabold text-accent' : 'text-2xl text-gray-800'}>Food Menu</Link></p></li>
                 <li><p className='text-center'><Link href="/potservices" className={pathname.startsWith('/potservices') ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>Pot Services</Link></p></li>
                 <li><p className='text-center'><a href="mailto:codemonga@gmail.com" className='text-2xl'>Contact</a></p></li>
                 <li><p className='text-center'><Link href="/about" className={pathname.startsWith('/about') ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>About</Link></p></li>
                 {user ? <li><p className='text-center'><Link href="/dashboard" className={pathname.startsWith('/dashboard') ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>Dashboard</Link></p></li> : <li><p className='text-center'><Link href="/login" className={pathname.startsWith('/login') ? 'text-2xl font-extrabold text-accent' : 'text-2xl'}>Login</Link></p></li>}
                 {!user ? <li><p className='text-center mt-12'><Link href="/register" className='text-2xl px-8 py-4 bg-accent text-primary font-semibold rounded-full'>Register</Link></p></li>: null}
             </ul>
-            {user ? <p className='text-center mt-12 absolute bottom-7'><Link href="/logout" className='text-2xl px-8 py-4 bg-accent text-primary rounded-full flex items-center' onClick={(e) => handleLogout(e)}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2 font-bold">
+            {user ? <p className='text-center absolute bottom-16'><Link href="/logout" className='text-lg px-8 py-3 bg-red-700 text-primary rounded-full flex items-center' onClick={(e) => handleLogout(e)}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-2 font-bold">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9" />
-                </svg>Logout</Link>
+                </svg>Log out</Link>
             </p> : null}
         </section>
     )
