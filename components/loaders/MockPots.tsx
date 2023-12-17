@@ -6,7 +6,7 @@ const MockPots = () => {
             <section className='container w-full py-20'>
                 <div className='md:flex items-center justify-between mb-16'>
                     <h3 className='font-bold text-5xl md:text-5xl xl:text-9xl gap-x-5'>Pot Services</h3>
-                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10'> While you are focused on working hard and achieving your dreams, we are focused on taking from you the pressure of having to cook your meals by cooking and delivering full pot of delicious meals to your doorstep in less than 24 hours.</p>
+                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10 text-gray-700'> While you are focused on working hard and achieving your dreams, we are focused on taking from you the pressure of having to cook your meals by cooking and delivering full pot of delicious meals to your doorstep in less than 24 hours.</p>
                 </div>
                 <div className='grid md:grid-cols-2 gap-x-6 gap-y-12'>
                     {[1, 2, 3, 4].map((meal:number, index:number) => <div className='pot-card relative overflow-hidden rounded-xl' key={index}>
@@ -24,17 +24,17 @@ const MockPots = () => {
                     <div className=''>
                         <div className='block'><img src="food.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quality Meals</h1>
-                        <p className='text-center'>Nigerian delicacies cooked and served with no compromise on quality.</p>
+                        <p className='text-center text-gray-700'>Nigerian delicacies cooked and served with no compromise on quality.</p>
                     </div>
                     <div className=''>
                         <div className="block"><img src="payment.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Flexible Payment</h1>
-                        <p className='text-center'>We offer a range of payment options including payment on delivery.</p>
+                        <p className='text-center text-gray-700'>We offer a range of payment options including payment on delivery.</p>
                     </div>
                     <div className=''>
                         <div className="block"><img src="delivery.png" alt="" className='h-60 mx-auto'/></div>
                         <h1 className='text-center text-3xl font-bold pb-4'>Quick Delivery</h1>
-                        <p className='text-center'>Fast, accurate and flexible delivery methods with a happy ending.</p>
+                        <p className='text-center text-gray-700'>Fast, accurate and flexible delivery methods with a happy ending.</p>
                     </div>
                 </div>
             </section>

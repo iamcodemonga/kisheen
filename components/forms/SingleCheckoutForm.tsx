@@ -98,7 +98,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices, user }: TProps)
                     });
                     playAudio('/livechat.mp3')
                     setLoading(false);
-                    router.push('/thanks');
+                    router.push(`/thanks?refno=${receipt}`);
                     return;
                 }
                 setLoading(false);
@@ -415,20 +415,20 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices, user }: TProps)
                                     <div className='space-x-6 hidden md:block'>
                                         <small><strong className='text-accent'>Size:</strong> {size}</small>
                                         <small><strong className='text-accent'>Meat:</strong> {meat}</small>
-                                        {size == "small(sm)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceSm}</small>}
-                                        {size == "medium(md)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.price}</small>}
-                                        {size == "large(lg)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceLg}</small>}
-                                        {size == "extra-large(xl)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceXl}</small>}
+                                        {size == "small(sm)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceSm?.toLocaleString()}</small>}
+                                        {size == "medium(md)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.price?.toLocaleString()}</small>}
+                                        {size == "large(lg)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceLg?.toLocaleString()}</small>}
+                                        {size == "extra-large(xl)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceXl?.toLocaleString()}</small>}
                                     </div>
                                 </div>
                             </div>
                             <div className='space-x-6 md:hidden'>
                                 <small><strong className='text-accent'>Size:</strong> {size}</small>
                                 <small><strong className='text-accent'>Meat:</strong> {meat}</small>
-                                {size == "small(sm)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceSm}</small>}
-                                {size == "medium(md)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.price}</small>}
-                                {size == "large(lg)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceLg}</small>}
-                                {size == "extra-large(xl)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceXl}</small>}
+                                {size == "small(sm)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceSm?.toLocaleString()}</small>}
+                                {size == "medium(md)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.price?.toLocaleString()}</small>}
+                                {size == "large(lg)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceLg?.toLocaleString()}</small>}
+                                {size == "extra-large(xl)" && <small><strong className='text-accent'>Amount:</strong> &#8358;{item.priceXl?.toLocaleString()}</small>}
                             </div>
                         </div> : 
                         <div className='space-y-2'>
@@ -440,7 +440,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices, user }: TProps)
                                         <small><strong className='text-accent'>Qty:</strong> {qty}</small>
                                         <small><strong className='text-accent'>Combo:</strong> {combo}</small>
                                         <small><strong className='text-accent'>Meat:</strong> {meat}</small>
-                                        <small><strong className='text-accent'>Price:</strong> &#8358;{item.price}</small>
+                                        <small><strong className='text-accent'>Price:</strong> &#8358;{item.price.toLocaleString()}</small>
                                     </div>
                                 </div>
                             </div>
@@ -448,7 +448,7 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices, user }: TProps)
                                 <small><strong className='text-accent'>Qty:</strong> {qty}</small>
                                 <small><strong className='text-accent'>Combo:</strong> {combo}</small>
                                 <small><strong className='text-accent'>Meat:</strong> {meat}</small>
-                                <small><strong className='text-accent'>Price:</strong> &#8358;{item.price}</small>
+                                <small><strong className='text-accent'>Price:</strong> &#8358;{item.price.toLocaleString()}</small>
                             </div>
                         </div>}
                     </div>
@@ -456,20 +456,20 @@ const CheckoutForm = ({ item, meat, combo, qty, size, potPrices, user }: TProps)
                         <h5 className='font-bold mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Sub-total <strong className='text-green-600'>(37% off)</strong></p>
-                                {item.type != "pot" ? <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{item.price*Number(qty)}</span><span className='text-green-600'>&#8358;{(item.price*Number(qty)*0.63)}</span></p> : <p>&#8358;{potPrices}</p>}
+                                <p className='text-gray-700 text-sm'>Sub-total {item.type == "pot" ? null : <strong className='text-green-600'>(37% off)</strong>}</p>
+                                {item.type != "pot" ? <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{(item.price*Number(qty)).toLocaleString()}</span><span className='text-green-600'>&#8358;{(item.price*Number(qty)*0.63).toLocaleString()}</span></p> : <p>&#8358;{potPrices?.toLocaleString()}</p>}
                             </div>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Delivery fee</p>
-                                <p>&#8358;{fee}</p>
+                                <p className='text-gray-700 text-sm'>Delivery fee</p>
+                                <p>&#8358;{fee.toLocaleString()}</p>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <p className=''>V.A.T</p>
-                                <p>&#8358;{vat}</p>
+                                <p className='text-gray-700 text-sm'>V.A.T</p>
+                                <p>&#8358;{vat.toLocaleString()}</p>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <p className='font-bold'>Total</p>
-                                <p>&#8358;{item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}</p>
+                                <p>&#8358;{item.type != "pot" ? ((item.price*Number(qty)*0.63)+fee+vat).toLocaleString() : (Number(potPrices)+fee+vat).toLocaleString()}</p>
                             </div>
                             <div className='space-y-4'>
                                 <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={() => handleCardCheckout([{ receipt: receipt, mealId: item.id, photo: item.photo.url, customerId: (user ? user.id : null), name: item.name, combo: combo as string, meat: meat as string, type: item.type as string, firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: 1, quantity: Number(qty), prepaid: true, amount: item.type != "pot" ? (item.price*Number(qty)*0.63)+fee+vat : Number(potPrices)+fee+vat}])}>Pay with card</button>

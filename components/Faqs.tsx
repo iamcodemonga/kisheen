@@ -18,7 +18,7 @@ const Faqs = () => {
         },
         {
             question: "Are deliveries available 24 hours everyday?",
-            answer: "Our shops open from 7am - 8pm but we only deliver orders from 9am - 7pm everyday. Nevertheless, we accept orders 24 hours everyday"
+            answer: "Our shops open from 7am - 8pm but we only deliver orders from 8am - 7pm everyday. Nevertheless, we accept orders 24 hours everyday"
         },
         {
             question: "Do you deliver everywhere or you have limited regions?",
@@ -44,7 +44,7 @@ const Faqs = () => {
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
                     </svg>}
                 </button>
-                <p>{index == active && q.answer}</p>
+                <p className='text-gray-900'>{index == active && q.answer}</p>
             </div>)}
         </div>
     )

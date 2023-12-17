@@ -21,7 +21,7 @@ const Slidermenu = async({ meals }: { meals: TMeal[]}) => {
             <div className='lg:flex mt-14 lg:mt-36 w-full'>
                 <div className='lg:block flex items-center justify-between lg:max-w-sm px-4 lg:px-8 lg:pl-20 mb-7 w-full'>
                     <h3 className='font-black text-xl md:text-3xl lg:text-5xl my-0 lg:mt-10 leading-normal'><span className='hidden lg:block'>Featured Delicacies</span><span className='lg:hidden'>Featured Meals</span></h3>
-                    <p className='hidden lg:block lg:my-6'>Make your choice from our list of delicious meals and get it delivered to your doorstep, today.</p>
+                    <p className='hidden lg:block lg:my-6 text-gray-700'>Make your choice from our list of delicious meals and get it delivered to your doorstep, today.</p>
                     <Link href="/menu" className='btn-link'>View Menu</Link>
                 </div>
                 <div className='slider-container flex gap-3 lg:gap-6 overflow-x-auto w-full px-4 relative pb-3 scroll-smooth'>
@@ -33,7 +33,7 @@ const Slidermenu = async({ meals }: { meals: TMeal[]}) => {
                         <h4 className='mb-1 mt-5 text-lg md:text-2xl font-bold'><Link href={meal.slug}>{meal.title}</Link></h4>
                         <div className='flex justify-between items-center w-full'>
                             <div className='space-x-2'>
-                                <span className='text-red-700 line-through text-sm lg:text-sm'>&#8358;{meal.price}</span><span className='text-green-700 text-sm lg:text-sm'>&#8358;{meal.price*(1-0.37)}</span>
+                                <span className='text-red-700 line-through text-sm lg:text-sm'>&#8358;{meal.price.toLocaleString()}</span><span className='text-green-700 text-sm lg:text-sm'>&#8358;{(meal.price*(1-0.37)).toLocaleString()}</span>
                             </div>
                         </div>
                         <span className='px-2 pt-2 pb-1 bg-green-700 absolute top-0 mt-2 rounded-lg left-0 ml-2 text-xs text-black font-bold'>37% off

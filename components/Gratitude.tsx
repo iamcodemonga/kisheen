@@ -3,7 +3,7 @@
 import React from 'react'
 import Link from 'next/link'
 
-const Gratitude = () => {
+const Gratitude = ({ refno }: { refno: string }) => {
     return (
         <section className='h-screen w-full flex justify-center md:items-center xl:items-start'>
                 <div className='max-w-3xl pt-10 xl:pt-16 px-2 md:px-10 xl:px-0'>
@@ -13,10 +13,10 @@ const Gratitude = () => {
                         </svg>
                     </div>
                     <h2 className='text-4xl md:text-5xl font-black text-center mb-5'>Thanks for patronizing us!</h2>
-                    <p className='text-center mb-7 text-gray-600'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos quibusdam est praesentium, similique laudantium delectus pariatur, qui voluptate totam eligendi recusandae exercitationem vero, numquam quaerat! Sed vitae, saepe vero sunt id perferendis soluta corporis optio quis dicta tenetur possimus.</p>
+                    <p className='text-center mb-7 text-gray-700'>We are thankful and highly motivated by your believe in us. Patiently await our processes as your order will be ready in the next 30 minutes. You can identity your order(s) with this reference number {refno && <strong className='px-3 py-1 rounded-lg bg-gray-200'>{refno}</strong>} which you can also find in your dashboard if you are registered with us. Thank you!</p>
                     <div className='flex justify-center'>
-                        <Link className="w-48 py-3 font-bold bg-gray-200 hover:bg-gray-100 rounded-xl text-accent flex items-center justify-center" href={`/menu`} >
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6">
+                        <Link className="w-48 py-2 font-bold bg-gray-900 hover:text-primary rounded-xl text-accent flex items-center justify-center" href={`/menu`} >
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 mb-1">
                                 <path fillRule="evenodd" d="M7.72 12.53a.75.75 0 010-1.06l7.5-7.5a.75.75 0 111.06 1.06L9.31 12l6.97 6.97a.75.75 0 11-1.06 1.06l-7.5-7.5z" clipRule="evenodd" />
                             </svg>Back to menu
                         </Link>

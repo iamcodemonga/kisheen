@@ -30,7 +30,7 @@ const RecommendedMeals = ({ meals, type }: Props) => {
                     <h4 className='mt-4 mb-1 text-xl font-bold'><Link href={`meal/${meal.slug}`}>{meal.title}</Link></h4>
                     <div className='flex justify-between items-center w-full'>
                         <div className='space-x-3'>
-                            {type == "pot" ? <span className='text-green-700'>&#8358;{`${meal.priceSm}`} &ndash; &#8358;{`${meal.priceXl}`}</span> : <><span className='text-red-700 line-through'>&#8358;{meal.price}</span><span className='text-green-700'>&#8358;{meal.price*(1-0.37)}</span></>}
+                            {type == "pot" ? <span className='text-green-700'>&#8358;{`${meal.priceSm?.toLocaleString()}`} &ndash; &#8358;{`${meal.priceXl?.toLocaleString()}`}</span> : <><span className='text-red-700 line-through'>&#8358;{meal.price.toLocaleString()}</span><span className='text-green-700'>&#8358;{(meal.price*(1-0.37)).toLocaleString()}</span></>}
                             {/* <span className='text-red-700 line-through'>&#8358;{meal.price}</span><span className='text-green-700'>&#8358;{meal.price*(1-0.37)}</span> */}
                         </div>
                     </div>

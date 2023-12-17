@@ -24,7 +24,7 @@ const MockTray = () => {
                 </div>
                 <div className='col-span-6 lg:col-span-2'>
                     <div className='border-2 p-6 lg:sticky lg:top-32'>
-                        <h4 className='mt-0 font-bold uppercase text-3xl mb-5'>Cart Summary</h4>
+                        <h4 className='mt-0 font-bold uppercase text-2xl mb-5'>Cart Summary</h4>
                         <div className='space-y-6'>
                             <div className='flex items-center justify-between'>
                                 <div className='bg-slate-300/50 w-24 h-5 rounded-lg'></div>

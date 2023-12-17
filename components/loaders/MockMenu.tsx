@@ -25,7 +25,7 @@ const MockMenu = () => {
             </aside>
             {/* <Fullmenu /> */}
             <section className='container py-6 lg:py-16 col-span-6 lg:col-span-5'>
-                <h1 className='text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
+                <h1 className='text-3xl md:text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
                 <div className='flex items-center justify-start mb-7 w-full'>
                     <button type="button" className='lg:hidden mr-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

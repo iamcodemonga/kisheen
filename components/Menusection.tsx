@@ -30,8 +30,8 @@ type Props = {
 const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }: Props) => {
 
   const router = useRouter();
-  const [ minPrice, setMinPrice ] = useState<number>(initialMinimumPrice)
-  const [ maxPrice, setMaxPrice ] = useState<number>(initialMaximumPrice)
+  const [ minPrice, setMinPrice ] = useState<string>(initialMinimumPrice.toString())
+  const [ maxPrice, setMaxPrice ] = useState<string>(initialMaximumPrice.toString())
   const [ activeRoute, setActiveRoute ] = useState<string | null>(active)
   const [ word, setWord ] = useState<string>('')
   const [ limit, setLimit ] = useState<number>(6)
@@ -106,12 +106,12 @@ const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }
   }
 
   const handleChangeMin = (value: number) => {
-    setMinPrice(value);
+    setMinPrice(value.toString());
     return;
   }
 
   const handleChangeMax = (value: number) => {
-    setMaxPrice(value);
+    setMaxPrice(value.toString());
     return;
   }
 
@@ -162,7 +162,7 @@ const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }
   return (
       <section className='grid grid-cols-6'>
           <aside className='pt-6 lg:pt-20 hidden lg:block lg:col-span-1 lg:pl-20 space-y-10'>
-              <Filterform min={minPrice} max={maxPrice} changeMin={handleChangeMin} changeMax={handleChangeMax} filter={handleFilter} category={handleCategory} changeActive={handleChangeActive} active={activeRoute as string} />
+              <Filterform min={minPrice.toString()} max={maxPrice.toString()} changeMin={handleChangeMin} changeMax={handleChangeMax} filter={handleFilter} category={handleCategory} changeActive={handleChangeActive} active={activeRoute as string} />
           </aside>
           <aside className={open ? 'small-screen-sidebar fixed w-full top-0 left-0 bg-primary/30 h-screen z-50' : 'hidden small-screen-sidebar'} id='filterbar' onClick={handleClose}>
               <div className='absolute w-80 px-10 top-0 left-0 bg-primary h-full pt-28 space-y-10'>
@@ -176,7 +176,7 @@ const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }
           </aside>
           {/* <Fullmenu /> */}
           <section className='container py-6 lg:py-16 col-span-6 lg:col-span-5'>
-              <h1 className='text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
+              <h1 className='text-3xl md:text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
               <div className='flex items-center justify-start mb-7 w-full'>
                   <button type="button" className='lg:hidden mr-3' onClick={OpenFilter}>
                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
@@ -196,7 +196,7 @@ const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }
                       <h4 className='mt-4 mb-1 text-lg font-bold'><Link href={meal.quantity ? `/meal/${meal.slug}` : ``}>{meal.title}</Link></h4>
                       <div className='flex justify-between items-center w-full'>
                           <div className='space-x-3'>
-                              <span className='text-red-700 line-through'>&#8358;{meal.price}</span><span className='text-green-700'>&#8358;{meal.price*(1-0.37)}</span>
+                              <span className='text-red-700 line-through'>&#8358;{meal.price.toLocaleString()}</span><span className='text-green-700'>&#8358;{(meal.price*(1-0.37)).toLocaleString()}</span>
                           </div>
                       </div>
                       <span className='px-2 pt-2 pb-1 bg-green-700 absolute top-0 mt-2 rounded-lg left-0 ml-2 text-xs text-black font-bold'>37% off</span>
@@ -211,7 +211,7 @@ const Menusection = ({ meals, active, initialMinimumPrice, initialMaximumPrice }
               </div>
               {food.length < 1 && <EmptyPosts heading="Search not found!" cta="Back to menu" />}
               <p className='text-center mt-10 md:mt-14 lg:mt-16'>
-                {limit <= food.length ? <button type='button' className='px-8 py-3 text-base bg-gray-900 font-bold rounded-full text-primary' onClick={() => handleMore(minPrice, maxPrice, activeRoute )}>Load more</button> : null}
+                {limit <= food.length ? <button type='button' className='px-8 py-3 text-base bg-gray-900 font-bold rounded-full text-primary' onClick={() => handleMore(Number(minPrice), Number(maxPrice), activeRoute )}>Load more</button> : null}
               </p>
           </section>
       </section>

@@ -47,7 +47,7 @@ const Mealorders = ({ orders, email }: { orders: TMyOrders[]; email: string }) =
                 <h4 className='mt-4 mb-0 text-lg font-bold'>{meal.name}</h4>
                 <small className='text-gray-500'>RefNo: {meal.receipt}</small>
                 <div className='flex justify-between items-center w-full mt-1'>
-                    <div className='space-x-3'><span className='text-green-700'>&#8358;{meal.amount} (Qty - {meal.quantity})</span>
+                    <div className='space-x-3'><span className='text-green-700'>&#8358;{meal.amount.toLocaleString()} (Qty - {meal.quantity})</span>
                     </div>
                 </div>
                 {meal.pending ? <span className='px-10 pt-3 pb-2 bg-red-500 absolute top-0 -mt-3 right-0 -mr-3 text-sm text-primary font-black uppercase rotate-0'>Pending</span> : <span className='px-5 pt-3 pb-2 bg-green-700 absolute top-0 mt-0 right-0 -mr-3 text-sm text-primary font-black uppercase rotate-12'>Delivered</span>}</div>): null : <MockPostGrid list={[1, 2, 3, 4, 5, 6]} />}

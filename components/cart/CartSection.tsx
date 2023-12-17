@@ -73,8 +73,8 @@ const CartSection = () => {
                                     <Link href={`/meal/${meal.slug}`} className='block mt-5 mb-0 font-bold overflow-ellipsis break-all text-lg w-full'>{meal.title}</Link>
                                     <div className='flex items-center justify-between mt-3 mb-3 md:mb-8'>
                                         <div className='space-x-3'>
-                                            <span className='text-red-700 line-through'>&#8358;{Number(meal.price)*Number(meal.cartQty)}</span>
-                                            <span className='text-green-700'>&#8358;{(Number(meal.price)*Number(meal.cartQty))*0.63}</span>
+                                            <span className='text-red-700 line-through'>&#8358;{(Number(meal.price)*Number(meal.cartQty)).toLocaleString()}</span>
+                                            <span className='text-green-700'>&#8358;{((Number(meal.price)*Number(meal.cartQty))*0.63).toLocaleString()}</span>
                                         </div>
                                         <button type='button' className='text-red-700 font-bold px-4 py-1 rounded-full flex items-center text-sm' onClick={() => handleDeleteMeal({ id: meal.id })}>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
@@ -143,19 +143,19 @@ const CartSection = () => {
                     </div>
                     <div className='col-span-6 lg:col-span-2'>
                         <div className='border-2 p-6 lg:sticky lg:top-32'>
-                            <h4 className='mt-0 font-bold uppercase text-3xl mb-5'>cart summary</h4>
+                            <h4 className='mt-0 font-bold uppercase text-2xl mb-5'>cart summary</h4>
                             {!pending ? <div className='space-y-0'>
                                 <div className='flex items-center justify-between'>
-                                    <p className=''>Amount</p>
-                                    <p>&#8358;{amount}</p>
+                                    <p className='text-gray-700'>Amount</p>
+                                    <p>&#8358;{amount.toLocaleString()}</p>
                                 </div>
                                 <div className='flex items-center justify-between'>
-                                    <p className=''>Discount <strong className='text-green-600'>(37%)</strong></p>
-                                    <p className='text-green-600 text-base'> <strong>- &#8358;{amount*0.37}</strong></p>
+                                    <p className='text-gray-700'>Discount <span className='text-green-600'>(37%)</span></p>
+                                    <p className='text-green-600 text-base'> - &#8358;{(amount*0.37).toLocaleString()}</p>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <p className='font-bold'>sub-total</p>
-                                    <p>&#8358;{amount*0.63}</p>
+                                    <p>&#8358;{(amount*0.63).toLocaleString()}</p>
                                 </div>
                                 <div className='space-y-4'>
                                     {items.length >= 1 ? <Link href="/checkout" className='block text-center w-full py-3 bg-gray-950 hover:text-accent font-bold text-primary'>Proceed to checkout</Link> : <button type="button" className='block text-center w-full py-3 bg-gray-950 hover:text-accent font-bold text-primary'>Proceed to checkout</button>}

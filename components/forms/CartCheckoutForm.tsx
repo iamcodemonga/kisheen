@@ -4,13 +4,13 @@ import { TCartItem, TPaystackTransactionProps } from '@/types'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import EmptyCart from '../EmptyCart'
-import MockCartList from '../loaders/MockCartList'
 import { useRouter } from 'next/navigation'
 import { usePaystackPayment } from 'react-paystack'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import OrderLoader from '../loaders/OrderLoader'
 import { playAudio } from '@/lib/graphcms'
+import MockOrderList from '../loaders/MockOrderList'
 
 type TUserProps = {
     id: string;
@@ -96,7 +96,7 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                     });
                     playAudio('/livechat.mp3')
                     setLoading(false);
-                    router.push('/thanks');
+                    router.push(`/thanks?refno=${receipt}`);
                     return;
                 }
                 setLoading(false);
@@ -431,7 +431,7 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                                         <small><strong className='text-accent'>Qty:</strong> {item.cartQty}</small>
                                         <small><strong className='text-accent'>Combo:</strong> {item.combo}</small>
                                         <small><strong className='text-accent'>Meat:</strong> {item.meat}</small>
-                                        <small><strong className='text-accent'>Amount:</strong> &#8358;{Number(item.price)*Number(item.cartQty)}</small>
+                                        <small><strong className='text-accent'>Amount:</strong> &#8358;{(Number(item.price)*Number(item.cartQty)).toLocaleString()}</small>
                                     </div>
                                 </div>
                             </div>
@@ -439,28 +439,28 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                                 <small><strong className='text-accent'>Qty:</strong> {item.cartQty}</small>
                                 <small><strong className='text-accent'>Combo:</strong> {item.combo}</small>
                                 <small><strong className='text-accent'>Meat:</strong> {item.meat}</small>
-                                <small><strong className='text-accent'>Amount:</strong> &#8358;{Number(item.price)*Number(item.cartQty)}</small>
+                                <small><strong className='text-accent'>Amount:</strong> &#8358;{(Number(item.price)*Number(item.cartQty)).toLocaleString()}</small>
                             </div>
-                        </div>) : <EmptyCart /> : <MockCartList /> }
+                        </div>) : <EmptyCart /> : <MockOrderList /> }
                     </div>
                     {!pending ? items.length >= 1 ? <div className='mt-10'>
                         <h5 className='font-bold mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Subtotal <strong className='text-green-600'>(37% off)</strong></p>
-                                <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{amount}</span><span className='text-green-600'>&#8358;{(amount*0.63)}</span></p>
+                                <p className='text-gray-700 text-sm'>Sub-total <strong className='text-green-600'>(37% off)</strong></p>
+                                <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{amount.toLocaleString()}</span><span className='text-green-600'>&#8358;{(amount*0.63).toLocaleString()}</span></p>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <p className=''>Delivery fee</p>
-                                <p>&#8358;{fee}</p>
+                                <p className='text-gray-700 text-sm'>Delivery fee</p>
+                                <p>&#8358;{fee.toLocaleString()}</p>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <p className=''>V.A.T</p>
-                                <p>&#8358;{vat}</p>
+                                <p className='text-gray-700 text-sm'>V.A.T</p>
+                                <p>&#8358;{vat.toLocaleString()}</p>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <p className='font-bold'>Total</p>
-                                <p>&#8358;{(amount*0.63)+fee+vat}</p>
+                                <p>&#8358;{((amount*0.63)+fee+vat).toLocaleString()}</p>
                             </div>
                             <div className='space-y-4'>
                                 <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={handleCardCheckout}>Pay with card</button>

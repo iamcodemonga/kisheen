@@ -4,8 +4,8 @@ import { ChangeEvent } from 'react'
 
 interface FilterFormProps {
     active: string | null;
-    min: number;
-    max: number;
+    min: string;
+    max: string;
     changeMin: (value: number) => void;
     changeMax: (value: number) => void;
     filter:  (minimum:number, maximum:number, group:string | null) => void;
@@ -45,7 +45,7 @@ const Filter = ({ min, max, active, changeMin, changeMax, filter, category, chan
                 <form action="" method="post" className='space-y-5 mt-4 w-full'>
                     <input type="number" name="" id="minimum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='minimum price' value={min} onChange={(e:ChangeEvent<HTMLInputElement>) => changeMin(Number(e.target.value))} />
                     <input type="number" name="" id="maximum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='maximum price' value={max} onChange={(e:ChangeEvent<HTMLInputElement>) => changeMax(Number(e.target.value))} />
-                    <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-bold' onClick={() => filter(min, max, active)}>Filter</button>
+                    <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-bold' onClick={() => filter(Number(min), Number(max), active)}>Filter</button>
                 </form>
             </div>
         </>
