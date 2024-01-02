@@ -102,3 +102,32 @@ select option {
   margin: 200px !important;
   padding-top: 200px !important;
 }
+
+@media (min-width: 769px) {
+  .admin-table::-webkit-scrollbar {
+    height: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  .admin-table::-webkit-scrollbar {
+    height: 3px;
+  }
+}
+
+/* Track */
+.admin-table::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px transparent; 
+  border-radius: 10px;
+}
+ 
+/* Handle */
+.admin-table::-webkit-scrollbar-thumb {
+  background: rgb(208, 207, 207);
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+.admin-table::-webkit-scrollbar-thumb:hover {
+  background: rgb(195, 194, 194);
+}

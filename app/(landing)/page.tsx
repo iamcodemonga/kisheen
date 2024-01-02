@@ -12,6 +12,7 @@ import { TMeal } from '@/types'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 // export const revalidate = 10;
 export const dynamic = "force-dynamic";
@@ -30,6 +31,7 @@ export default async function Home() {
         <AppLaunch />
         <Contact />
         <WhatsApp />
+        <Footer />
         {/* <Modal type='seasonal' discount={80} /> */}
       </>
     )

@@ -3,6 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
 import ThanksSection from '@/components/Gratitude'
+import Footer from '@/components/Footer'
 
 const thanks = async({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     const session = await getServerSession(authOptions)
@@ -14,6 +15,7 @@ const thanks = async({ searchParams }: { searchParams: { [key: string]: string |
         <>
             <Navbar user={user[0]} />
             <ThanksSection refno={refno} />
+            <Footer />
         </>
     )
 }

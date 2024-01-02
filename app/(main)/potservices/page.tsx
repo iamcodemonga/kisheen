@@ -6,6 +6,7 @@ import Navbar from '@/components/bars/Navbar'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 const Potservices = async() => {
     const session = await getServerSession(authOptions)
@@ -15,6 +16,7 @@ const Potservices = async() => {
         <>
             <Navbar user={user[0]} />
             <Meals />
+            <Footer />
             <WhatsApp />
         </>
     )

@@ -6,6 +6,7 @@ import React from 'react'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 const Checkout = async() => {
     const session = await getServerSession(authOptions)
@@ -16,6 +17,7 @@ const Checkout = async() => {
             <Navbar user={user[0]} />
             <CheckoutBanner meal={undefined} />
             <CartCheckoutForm user={user[0]} />
+            <Footer />
         </>
     )
 }

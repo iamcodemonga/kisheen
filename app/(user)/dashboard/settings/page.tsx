@@ -16,6 +16,7 @@ const Settings = async() => {
             <Navbar user={user[0]} />
             <Bio page='settings' user={user[0]} />
             <Tab page='settings' user={user[0]} />
+            <Footer />
         </>
     )
 }

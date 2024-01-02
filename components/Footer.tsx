@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 const Footer = () => {
+
     return (
         <footer className='bg-gray-950 overflow-x-hidden'>
             <div className='grid lg:grid-cols-4 justify-items-center content-center gap-y-10 gap-x-5 py-24 md:py-52 px-10 lg:px-16 overflow-x-hidden'>

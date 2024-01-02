@@ -4,6 +4,7 @@ import CartSection from '@/components/cart/CartSection'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 type TUserProps = {
     id: string;
@@ -22,6 +23,7 @@ const Cart = async() => {
         <>
             <Navbar user={user[0]} />
             <CartSection />
+            <Footer />
         </>
     )
 }

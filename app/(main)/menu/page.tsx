@@ -7,6 +7,7 @@ import Navbar from '@/components/bars/Navbar'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 const Menu = async({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
     const session = await getServerSession(authOptions)
@@ -38,6 +39,7 @@ const Menu = async({ searchParams }: { searchParams: { [key: string]: string | s
             <>
                 <Navbar user={user[0]} />
                 <Menusection meals={filteredMeals} active={null} initialMinimumPrice={min} initialMaximumPrice={max} />
+                <Footer />
                 <WhatsApp />
             </>
         )
@@ -52,6 +54,7 @@ const Menu = async({ searchParams }: { searchParams: { [key: string]: string | s
             <>
                 <Navbar user={user[0]} />
                 <Menusection meals={meals} active={mealcategory} initialMinimumPrice={min} initialMaximumPrice={max} />
+                <Footer />
                 <WhatsApp />
             </>
         )

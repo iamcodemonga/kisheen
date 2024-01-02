@@ -9,6 +9,7 @@ import React from 'react'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer';
 
 type Props = {
     params: { slug: string };
@@ -68,6 +69,7 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
             <Navbar user={user[0]} />
             <CheckoutBanner meal={`${item.slug}`} />
             <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} user={user[0]} />
+            <Footer />
         </>
     )
 }

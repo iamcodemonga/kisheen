@@ -5,6 +5,7 @@ import Tab from '@/components/profile/Usersection'
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
+import Footer from '@/components/Footer'
 
 const Dashboard = async() => {
     const session = await getServerSession(authOptions)
@@ -15,6 +16,7 @@ const Dashboard = async() => {
             <Navbar user={user[0]}  />
             <Bio page='index' user={user[0]} />
             <Tab page='index' user={user[0]}/>
+            <Footer />
         </>
     )
 }

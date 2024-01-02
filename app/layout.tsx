@@ -9,7 +9,7 @@ import { authOptions } from './api/auth/[...nextauth]/options'
 import AuthProvider from './context/Providers'
 
 export const metadata = {
-  title: 'Eat healthy, Live longer - Qitcheen',
+  title: 'Eat healthy, Live longer - kisheen',
   description: 'Get the best Nigerian delicacies at your door step in no time ',
 }
 
@@ -29,8 +29,7 @@ export default async function RootLayout({
             <ReduxProvider>
               <ProgressBar>
                   <ScrollToTop /> 
-                    {children}
-                  <Footer />
+                  {children}
               </ProgressBar>
             </ReduxProvider>
           </AuthProvider>
