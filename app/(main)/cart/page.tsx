@@ -33,7 +33,7 @@ const Cart = async() => {
       const session = await getServerSession(authOptions)
       const user = await getUser(session?.user?.email as string)
     
-      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.type : 0);
+      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.rate : 0);
 
       let checkout = (settings.data.cardpay ? settings.data.manualpay ? true : true : settings.data.manualpay ? true : false)
     

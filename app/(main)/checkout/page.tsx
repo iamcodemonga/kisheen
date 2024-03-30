@@ -26,7 +26,7 @@ const Checkout = async() => {
 
       const eligible: boolean = user.profile?.bonuslevel == 0 ? true : false;
     
-      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.type : 0);
+      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.rate : 0);
 
     return (
         <>

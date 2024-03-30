@@ -36,7 +36,7 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
       const eligible: boolean = user.profile?.bonuslevel == 0 ? true : false;
       console.log(eligible)
     
-      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.type : 0);
+      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.rate : 0);
     
     let meat: string | string[] | undefined = searchParams.meat;
     let combo: string | string[] | undefined = searchParams.combo;
