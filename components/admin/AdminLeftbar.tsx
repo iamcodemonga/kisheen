@@ -14,8 +14,6 @@ const AdminLeftbar = ({ previledge, music }: { previledge: string, music: string
     const router = useRouter();
     const [ played, setPlayed ] = useState<boolean>(false)
     const [ notifications, setNotifications ] = useState<Array<number>>([])
-    // const [ socket, setSocket ] = useState<any>()
-    // const socket = io("http://localhost:8000")
     const handleLogout = async(e: FormEvent) => {
         e.preventDefault();
         await signOut()
@@ -32,11 +30,6 @@ const AdminLeftbar = ({ previledge, music }: { previledge: string, music: string
     }
 
     useEffect(() => {
-
-        // Listen for incoming orders
-    }, [])
-
-    useEffect(() => {
         const socket = io(process.env.NEXT_PUBLIC_API_ROOT as string)
         // Listen for incoming orders
         socket.on("neworder", (message: number) => {
@@ -45,7 +38,6 @@ const AdminLeftbar = ({ previledge, music }: { previledge: string, music: string
                 setPlayed(false);
             } else {
                 setNotifications(prevorders => [message, ...prevorders]);
-                // setNotifications(prevorders => prevorders.push(message));
                 setPlayed(true);
             }
             return () => {
@@ -86,7 +78,7 @@ const AdminLeftbar = ({ previledge, music }: { previledge: string, music: string
                               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 1 0-7.5 0v4.5m11.356-1.993 1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 0 1-1.12-1.243l1.264-12A1.125 1.125 0 0 1 5.513 7.5h12.974c.576 0 1.059.435 1.119 1.007ZM8.625 10.5a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm7.5 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
                           </svg>
                           Orders
-                          {played ? <span className='bg-green-500 pl-[5px] pr-[6px] ml-1 text-xs rounded-full text-center text-black'>{notifications.length/2}</span> : null}
+                          {played ? <span className='bg-green-500 pl-[5px] pr-[6px] ml-1 text-xs rounded-full text-center text-black'>{notifications.length}</span> : null}
                           </Link>
                       </li>
                       <li><Link href={previledge == "board" ? "/admin/customers" : previledge == "manager" ? "/admin/customers" : "/admin/orders"} className={path == "/admin/customers" ? "text-base flex items-center py-3 px-5 bg-primary/10 border-l-4 border-accent" : "text-base flex items-center py-3 px-5 hover:bg-primary/10 border-l-4 border-transparent"}>
