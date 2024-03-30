@@ -28,7 +28,7 @@ const Profilebar = ({ visible, activate }: Props) => {
     }
 
     return (
-        <section className={`w-full h-screen ${visible ? "fixed" : "hidden"} z-[60] bg-gray-950/70 top-0 left-0 flex items-end justify-center px-2 pb-5` }id='dashboardpopup' onClick={(e) => handleClose(e)}>
+        <section className={`w-full h-screen ${visible ? "fixed" : "hidden"} z-[60] bg-gray-950/70 top-0 left-0 flex items-center justify-center px-2 pb-5` }id='dashboardpopup' onClick={(e) => handleClose(e)}>
             <div className='w-full px-5 py-10 rounded-xl bg-primary space-y-5'>
                 <Link href="/dashboard" className={`block ${pathname == '/dashboard' ? "text-2xl text-accent" : "text-base"}`}>Dashboard</Link>
                 <Link href="/dashboard/settings" className={`block ${pathname == '/dashboard/settings' ? "text-2xl text-accent" : "text-base"}`}>Settings</Link>
