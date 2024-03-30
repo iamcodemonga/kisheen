@@ -1,12 +1,5 @@
-import Footer from '@/components/Footer'
-import Navbar from '@/components/bars/Navbar'
-import Bio from '@/components/profile/Userheading'
-import Tab from '@/components/profile/Usersection'
-import Link from 'next/link';
-
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
-import { EmailExists, MyOrders } from '@/lib/graphcms'
 import EditUserForm from '@/components/forms/EditUserForm'
 import Changepassword from '@/components/forms/Changepassword';
 import { getUser } from '@/lib/datacalls';

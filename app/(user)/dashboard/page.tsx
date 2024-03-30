@@ -1,13 +1,8 @@
-import Navbar from '@/components/bars/Navbar'
 import Bio from '@/components/profile/Userheading'
-import Tab from '@/components/profile/Usersection'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
-import { EmailExists, MyOrders } from '@/lib/graphcms'
-import Footer from '@/components/Footer'
 import Mealorders from '@/components/datalist/Mealorders'
-import Link from 'next/link'
 import { getUser, getUserOrders } from '@/lib/datacalls'
 import { redirect } from 'next/navigation'
 import ProfileNav from '@/components/bars/ProfileNav'
@@ -19,11 +14,6 @@ type TUserProps = {
     email: string;
     role: string;
     password?: string;
-}
-
-type Active = {
-    page: string;
-    user: TUserProps;
 }
 
 export const dynamic = "force-dynamic";
