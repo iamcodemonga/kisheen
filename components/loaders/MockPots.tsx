@@ -2,11 +2,11 @@ import React from 'react'
 
 const MockPots = () => {
     return (
-        <>
-            <section className='container w-full py-20'>
-                <div className='md:flex items-center justify-between mb-16'>
-                    <h3 className='font-bold text-5xl md:text-5xl xl:text-9xl gap-x-5'>Pot Services</h3>
-                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10 text-gray-700'> While you are focused on working hard and achieving your dreams, we are focused on taking from you the pressure of having to cook your meals by cooking and delivering full pot of delicious meals to your doorstep in less than 24 hours.</p>
+        <section className='w-full'>
+            <section className='px-4 lg:px-20 py-20'>
+                <div className='w-full md:flex items-center justify-between mb-16'>
+                    <h3 className='font-bold text-5xl md:text-5xl xl:text-9xl gap-x-5'>Pot <span className='text-accent'>Services</span></h3>
+                    <p className='md:max-w-sm mt-8 md:mt-0 mb-10 text-gray-500 font-normal'>While you are focused on working hard and achieving your dreams, we are focused on taking from you the pressure of having to cook your meals by cooking and delivering full pot of delicious meals to your doorstep in less than 24 hours.</p>
                 </div>
                 <div className='grid md:grid-cols-2 gap-x-6 gap-y-12'>
                     {[1, 2, 3, 4].map((meal:number, index:number) => <div className='pot-card relative overflow-hidden rounded-xl' key={index}>
@@ -19,26 +19,32 @@ const MockPots = () => {
                     </div>)}
                 </div>
             </section>
-            <section className='bg-accent/5 w-full container pt-96 pb-28 lg:pb-52 -mt-96 lg:-mt-72'>
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-40 gap-y-10">
+            <div className='bg-accent/5 px-4 lg:px-20 pt-96 pb-28 lg:pb-52 -mt-96 lg:-mt-72'>
+                <div className="grid lg:grid-cols-3 gap-x-40 gap-y-10">
                     <div className=''>
-                        <div className='block'><img src="food.png" alt="" className='h-60 mx-auto'/></div>
-                        <h1 className='text-center text-3xl font-bold pb-4'>Quality Meals</h1>
-                        <p className='text-center text-gray-700'>Nigerian delicacies cooked and served with no compromise on quality.</p>
+                        <div className='block'>
+                            <img src="food.png" alt="" className='h-60 mx-auto'/>
+                        </div>
+                        <h1 className='text-center text-3xl font-medium pb-4'>Quality Meals</h1>
+                        <p className='text-center text-gray-500 font-normal'>Nigerian delicacies cooked and served with no compromise on quality. </p>
                     </div>
                     <div className=''>
-                        <div className="block"><img src="payment.png" alt="" className='h-60 mx-auto'/></div>
-                        <h1 className='text-center text-3xl font-bold pb-4'>Flexible Payment</h1>
-                        <p className='text-center text-gray-700'>We offer a range of payment options including payment on delivery.</p>
+                        <div className="block">
+                            <img src="payment.png" alt="" className='h-60 mx-auto'/>
+                        </div>
+                        <h1 className='text-center text-3xl font-medium pb-4'>Flexible Payment</h1>
+                        <p className='text-center text-gray-500 font-normal'>We offer a range of payment options including payment on delivery.</p>
                     </div>
                     <div className=''>
-                        <div className="block"><img src="delivery.png" alt="" className='h-60 mx-auto'/></div>
-                        <h1 className='text-center text-3xl font-bold pb-4'>Quick Delivery</h1>
-                        <p className='text-center text-gray-700'>Fast, accurate and flexible delivery methods with a happy ending.</p>
+                        <div className="block">
+                            <img src="delivery.png" alt="" className='h-60 mx-auto'/>
+                        </div>
+                        <h1 className='text-center text-3xl font-medium pb-4'>Quick Delivery</h1>
+                        <p className='text-center text-gray-500 font-normal'>Fast, accurate and flexible delivery methods with a happy ending.</p>
                     </div>
                 </div>
-            </section>
-        </>
+            </div>
+        </section>
     )
 }
 

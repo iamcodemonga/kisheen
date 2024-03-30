@@ -7,7 +7,7 @@ import { TCartItem, TMeal } from '@/types'
 import { useDispatch, useSelector } from 'react-redux'
 import { addProduct } from '@/features/cartSlice'
 
-const FoodInfo = ({ meal }: { meal: TMeal}) => {
+const FoodInfo = ({ meal, allowcart, discount }: { meal: TMeal, allowcart: boolean, discount: number }) => {
 
     const dispatch = useDispatch();
 
@@ -86,58 +86,53 @@ const FoodInfo = ({ meal }: { meal: TMeal}) => {
     }
     
     return (
-        <section className='container w-full grid grid-cols-2 gap-10 py-20 lg:py-28 items-center'>
-            <div className='col-span-2 lg:col-span-1 bg-gray-200'>
+        <section className='px-4 lg:px-20 w-full grid grid-cols-2 gap-y-10 gap-x-10 py-20 lg:py-28 items-center'>
+            <div className='col-span-2 lg:col-span-1 bg-gray-200 rounded-lg'>
                 <Image className='w-full object-cover rounded-lg' src={food.photo.url} alt="meal_picture" height={500} width={400} priority />
             </div>
             <div className="col-span-2 lg:col-span-1">
-                <h1 className='my-0 text-2xl md:text-4xl font-bold'>{food.title}</h1>
-                <h5 className='space-x-3 my-5'>
-                    <span className={food.type == 'pot' ? 'text-green-700' : 'text-red-700 line-through' }>&#8358;{amount.toLocaleString()}</span>
-                    <span className={food.type == 'pot' ? 'text-green-700 hidden' : 'text-green-700'}>&#8358;{(amount*(1-0.37)).toLocaleString()}</span></h5>
+                <h1 className='my-0 text-2xl md:text-4xl font-normal lg:leading-snug'>{food.title}</h1>
+                <h5 className='space-x-3 mb-5 mt-3'>
+                    <span className={food.type == 'pot' ? 'text-green-700 font-normal' : discount > 0 ? 'text-red-700 line-through font-normal' : 'text-green-700 font-normal' }>&#8358;{amount.toLocaleString()}</span>
+                    <span className={food.type == 'pot' ? 'text-green-700 hidden' : discount > 0 ? 'text-green-700 font-normal' : 'hidden'}>&#8358;{(amount*(1-(discount/100))).toLocaleString()}</span></h5>
                 {food.description && <p className='hidde'>{food.description}</p>}
                 <form action="" method="post" className={food.type == 'pot' ? `space-y-4 mt-8 hidden` : `space-y-4 mt-8`}>
                     <div className='flex flex-col'>
-                        <label htmlFor="combo" className='font-bold'>Combo</label>
-                        <select name="combo" id="combo" value={combo} onChange={(e) => handleCombo(e.target.value)} className='w-full py-3 px-3 bg-gray-200 rounded-xl'>
+                        <label htmlFor="combo" className='font-normal text-sm text-accent'>Combo</label>
+                        <select name="combo" id="combo" value={combo} onChange={(e) => handleCombo(e.target.value)} className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {comboList && comboList.map(combo => <option value={combo}>{combo}</option>)}
                         </select>
                     </div>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-bold'>Meat</label>
-                        <select name="meat" id="meat" value={meat} onChange={(e) => handleMeat(e.target.value)} className='w-full py-3 px-3 bg-gray-200 rounded-xl'>
+                        <label htmlFor="" className='font-normal text-sm text-accent'>Meat</label>
+                        <select name="meat" id="meat" value={meat} onChange={(e) => handleMeat(e.target.value)} className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {meatList && meatList.map(bite => <option value={bite}>{bite}</option>)}
                         </select>
                     </div>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-bold'>Quantity</label>
-                        {/* <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(Number(e.target.value))} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} /> */}
-                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-gray-200 rounded-xl' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(e.target.value)} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
+                        <label htmlFor="" className='font-normal text-sm text-accent'>Quantity</label>
+                        <input type="number" name="" id="" placeholder=' quantity of food e.g 2' className='w-full py-2 px-3 bg-slate-200 rounded-lg outline-none' value={quantity} onChange={(e:ChangeEvent<HTMLInputElement>) => setQuantity(e.target.value)} onBlur={(e:ChangeEvent<HTMLInputElement>) => handleQuantity(Number(e.target.value))} />
                     </div>
                     <div className='md:flex md:space-x-5 space-y-7 md:space-y-4 items-center'>
-                        <button type="button" className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm' onClick={() => handleCart({id: meal.id, photo: meal.photo.url, name: meal.name, title: meal.title, slug: meal.slug, price: meal.price, quantity: meal.quantity, cartQty: Number(quantity), type: meal.type, category: meal.category, combo: combo, comboList: meal.combo?.split(','), meat: meat, meatList: meal.meat?.split(',')})}>Add to cart</button>
-                        <Link href={`/checkout/${food.slug}?qty=${quantity}&meat=${meat.trim()}&combo=${combo.trim()}`} className='bg-green-500 hover:bg-green-600 w-full pt-4 pb-3 rounded-xl font-bold mt-4 uppercase text-sm text-center block'>Buy Now</Link>
+                        {allowcart ? <button type="button" className='bg-slate-800 hover:bg-slate-700 w-full pt-4 pb-3 rounded-lg font-normal mt-4 uppercase text-sm text-primary' onClick={() => handleCart({id: meal.id, photo: meal.photo.url, name: meal.name, title: meal.title, slug: meal.slug, price: meal.price, quantity: meal.quantity, cartQty: Number(quantity), type: meal.type, category: meal.category, combo: combo, comboList: meal.combo?.split(','), meat: meat, meatList: meal.meat?.split(',')})}>Add to cart</button> : null}
+                        <Link href={`/checkout/${food.slug}?qty=${quantity}&meat=${meat.trim()}&combo=${combo.trim()}`} className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-lg font-medium mt-4 uppercase text-sm text-center block text-primary'>Buy Now</Link>
                     </div>
                 </form>
                 <form action="" method="post" className={food.type == 'pot' ? `space-y-4 mt-8` : `space-y-4 mt-8 hidden`}>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-bold'>Pot size</label>
-                        <select name="" id="" value={potSize} onChange={(e) => handleSize(e.target.value)} className='w-full py-3 px-3 bg-gray-200 rounded-xl'>
+                        <label htmlFor="" className='font-normal text-sm text-accent'>Pot size</label>
+                        <select name="" id="" value={potSize} onChange={(e) => handleSize(e.target.value)} className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {sizeList && sizeList.map(size => <option value={size} className=''>{size}</option>)}
-                            {/* <option value="">small(sm)</option>
-                            <option value="">medium(md)</option>
-                            <option value="">large(lg)</option>
-                            <option value="">extra-large(xl)</option> */}
                         </select>
                     </div>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-bold'>Meat</label>
-                        <select name="" id="" value={meat} onChange={(e) => handleMeat(e.target.value)}  className='w-full py-3 px-3 bg-gray-200 rounded-xl'>
+                        <label htmlFor="" className='font-normal text-sm text-accent'>Meat</label>
+                        <select name="" id="" value={meat} onChange={(e) => handleMeat(e.target.value)}  className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {meatList && meatList.map(bite => <option value={bite}>{bite}</option>)}
                         </select>
                     </div>
                     <div>
-                        <Link href={`/checkout/${food.slug}?meat=${meat.trim()}&size=${potSize}`} className='bg-accent hover:bg-green-600 w-full pt-4 pb-3 rounded-xl font-bold mt-8 uppercase text-sm text-center block'>Buy Now</Link>
+                        <Link href={`/checkout/${food.slug}?meat=${meat.trim()}&size=${potSize}`} className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-lg font-medium mt-8 uppercase text-sm text-center block text-primary'>Buy Now</Link>
                     </div>
                 </form>
             </div>

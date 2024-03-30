@@ -230,7 +230,7 @@ const cartSlice = createSlice({
                 });
                 playAudio('/fwoosh.mp3')
         },
-        clearCart(state, action) {
+        clearCart(state) {
             state.items = [];
             state.quantity = 0;
             state.amount = 0;

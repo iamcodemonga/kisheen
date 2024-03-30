@@ -1,7 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { EmailExists } from "@/lib/graphcms";
-import bcrypt from "bcrypt"
+import axios from "axios";
+// import { EmailExists } from "@/lib/graphcms";
+// import bcrypt from "bcrypt"
 
 export const authOptions: NextAuthOptions = {
     providers: [
@@ -13,19 +14,13 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 const { email, password } = credentials as { email: string, password: string };
+                const api = process.env.API_ROOT;
                 try {
-                    const exists = await EmailExists(email);
-                    if (exists.length < 1) {
-                        throw new Error("User does not exist!");
+                    const { data } = await axios.post(`${api}/auth/login`, {email, password});
+                    if (data.error) {
+                        throw new Error(data.message);
                     }
-
-                    const match = await bcrypt.compare(password, exists[0].password)
-                    if (!match) {
-                        throw new Error("Email and Password is incorrect!");
-                    } else {
-                        const user = exists[0];
-                        return user;
-                    }
+                    return data.user;
                 } catch (error) {
                     console.log(error)
                 }

@@ -19,6 +19,8 @@ module.exports = {
       fontFamily: {
         josefin: [ 'josefin sans' ],
         nunito: [ 'nunito sans' ],
+        poppins: [ 'poppins sans' ],
+        dm: [ 'DM sans' ],
       }
     },
   },

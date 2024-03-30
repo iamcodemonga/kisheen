@@ -21,7 +21,8 @@ const PieChart = ({ chartData }: { chartData: any }) => {
                 title: {
                     text: "Top Services",
                     font: {
-                        size: 20
+                        size: 20,
+                        weight: 400
                     }
                 }
             }

@@ -7,7 +7,7 @@ const Footer = () => {
             <div className='grid lg:grid-cols-4 justify-items-center content-center gap-y-10 gap-x-5 py-24 md:py-52 px-10 lg:px-16 overflow-x-hidden'>
                 <div className=''>
                     <h2 className='mt-0 mb-5 text-center font-extrabold text-accent text-4xl md:text-7xl lg:text-6xl'>Kisheen</h2>
-                    <p className='text-center px-3 max-w-md text-gray-400'>Nigeria's best delicacies all in one place, prepared and delivered to your doorstep in no time.</p>
+                    <p className='text-center px-3 max-w-md text-slate-400 text-normal'>Nigeria's best delicacies all in one place, prepared and delivered to your doorstep in no time.</p>
                 </div>
                 <div className='hidde'>
                     <ul className='space-y-2 hidden'>

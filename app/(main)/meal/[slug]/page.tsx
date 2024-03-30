@@ -9,6 +9,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
 import Footer from '@/components/Footer'
+import { getUser } from '@/lib/datacalls'
+import axios from 'axios'
+import MockDetails from '@/components/loaders/MockDetails'
 
 type Pageprops  = {
     params: {
@@ -18,9 +21,16 @@ type Pageprops  = {
 
 const page = async({ params } : Pageprops) => {
     const session = await getServerSession(authOptions)
-    const user = await EmailExists(session?.user?.email as string)
+    const user = await getUser(session?.user?.email as string)
 
     const meal = await Meal(params.slug);
+
+    const [ discount, settings ] = await Promise.all([
+        axios(`${process.env.API_ROOT}/settings/discount`),
+        axios(`${process.env.API_ROOT}/settings`)
+      ])
+    
+      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.type : 0);
 
     if(!meal) {
         redirect('/');
@@ -36,11 +46,9 @@ const page = async({ params } : Pageprops) => {
    
     return (
         <>
-            <Navbar user={user[0]} />
-            <FoodInfo meal={meal} />
-            <RecommendedMeals meals={similarMeals} type={meal.type == "pot" ? meal.type : meal.type} />
-            <Footer />
-            <WhatsApp />
+            <Navbar user={user.profile} allowcart={settings.data.cart} />
+            <FoodInfo meal={meal} allowcart={settings.data.cart} discount={bonus} />
+            <RecommendedMeals meals={similarMeals} type={meal.type == "pot" ? meal.type : meal.type} allowcart={settings.data.cart} discount={bonus} />
         </>
     )
 }

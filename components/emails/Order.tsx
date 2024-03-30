@@ -2,121 +2,48 @@ import { Body, Container, Column, Head, Heading, Html, Img, Link, Preview, Row, 
 import * as React from 'react';
 import { OrdersEmailTemplateProps } from '@/types';
   
-export const EmailOrderTemplate = ({ name, receipt, delivery }: OrdersEmailTemplateProps) => (
+export const EmailOrderTemplate = ({ firstname, receipt, address, amount }: OrdersEmailTemplateProps) => (
   <Html>
     <Head />
-    <Preview>We are on our way!!!</Preview>
+    {/* <Preview>Your Order with Kisheen is on its way! 🚀</Preview> */}
     <Body style={main}>
       <Container style={container}>
         <Section style={logoContainer}>
           <Img
-            src={`https://assets.stickpng.com/thumbs/652d7d9c6e99ebc857385488.png`}
+            src={`https://assets-global.website-files.com/6165adad51c39da51d4fe6cd/616da2c309aa0721dacedf0a_logo-restaurante-x-template.svg`}
             width="120"
             height="120"
-            alt="Slack"
+            alt="Kisheen"
           />
         </Section>
-        <Heading style={h1}>Hello, {name}</Heading>
-        <Text style={heroText}>{delivery == "home" ? "This is to notify you that we have received your order(s) and are currently processing it! Kindly exercise patience as you await your package as it will be delivered to your doorstep in no time. You can always identify your order with the reference number below.": "This is to notify you that we have received your order and are currently processing it! kindly head over to our shop in the next 30 minutes to identify and pickup your order using the reference number below."}</Text>
-        <Section style={codeBox}>
-          <Text style={confirmationCodeText}>{receipt}</Text>
-        </Section>
-
-        <Text style={text}>
-          Thank you so much for believing and patronizing us as we pledge to always be at your service.
+        <Heading style={h1}>Hello <span style={{color: "#F75C04"}}>{firstname}</span>,</Heading>
+        <Text style={paragraph}>Thank you for choosing Kisheen for your culinary delights! Your order is confirmed, and we're excited to let you know that it's already in the works.</Text>
+        <Text style={heroText}>Order details:</Text>
+        <div style={codeBox}>
+          <ul>
+            <li><Text style={p}><strong>Reference Number:</strong> {receipt}</Text></li>
+            <li><Text style={p}><strong>Delivery address:</strong> {address}</Text></li>
+            <li><Text style={p}><strong>Total Amount:</strong> &#8358;{amount.toLocaleString()}</Text></li>
+          </ul>
+          {/* <Text style={confirmationCodeText}>{receipt}</Text> */}
+        </div>
+        <Text style={text}>You can track the status of your order through our website. Watch the status of your package until it gets to your doorstep, ensuring you're always in the know. Our delivery team may need to reach out to you for a smooth delivery experience. If you have any questions or need assistance, our customer support team is ready to help. Reply to this email or call us at <a href="tel:07066340180" style={{ color: "#F75C04", textDecoration: "underline" }}>07066340180</a>.
         </Text>
-
+        <Text style={text}>We appreciate your trust in us and look forward to making your meal experience exceptional. Should you have any feedback or suggestions, we'd love to hear from you.
+        </Text>
+        <Text style={text}>To delicious moments ahead!
+        </Text>
+        <Text style={paragraph}>
+            Best Regards,
+            <br />
+            The Kisheen team
+            <br />
+            <a href="tel:07066340180" style={{ color: "#F75C04", textDecoration: "underline" }}>07066340180</a>
+            </Text>
         <Section>
-          <Row style={footerLogos}>
-            <Column style={{ width: '66%' }}>
-              <Img
-                src={`https://assets.stickpng.com/thumbs/652d7d9c6e99ebc857385488.png`}
-                width="36"
-                height="36"
-                alt="Slack"
-              />
-            </Column>
-            <Column>
-              <Row>
-                <Column>
-                  <Link href="/">
-                    <Img
-                      src={`https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c545.png`}
-                      width="32"
-                      height="32"
-                      alt="Slack"
-                      style={socialMediaIcon}
-                    />
-                  </Link>
-                </Column>
-                <Column>
-                  <Link href="/">
-                    <Img
-                      src={`https://assets.stickpng.com/thumbs/602179070ad3230004b93c28.png`}
-                      width="32"
-                      height="32"
-                      alt="Slack"
-                      style={socialMediaIcon}
-                    />
-                  </Link>
-                </Column>
-                <Column>
-                  <Link href="/">
-                    <Img
-                      src={`https://assets.stickpng.com/thumbs/580b57fcd9996e24bc43c521.png`}
-                      width="32"
-                      height="32"
-                      alt="Slack"
-                      style={socialMediaIcon}
-                    />
-                  </Link>
-                </Column>
-              </Row>
-            </Column>
-          </Row>
-        </Section>
-
-        <Section>
-          <Link
-            style={footerLink}
-            href="https://slackhq.com"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Our blog
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://slack.com/legal"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Policies
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://slack.com/help"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Help center
-          </Link>
-          &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-          <Link
-            style={footerLink}
-            href="https://slack.com/community"
-            target="_blank"
-            rel="noopener noreferrer"
-            data-auth="NotApplicable"
-            data-linkindex="6"
-          >
-            Slack Community
-          </Link>
           <Text style={footerText}>
-            ©2022 Slack Technologies, LLC, a Salesforce company. <br />
-            500 Howard Street, San Francisco, CA 94105, USA <br />
+            ©2024 Kisheen, LLC, a food delivery company. <br />
+            NO.14 Shelton afrik, Uyo, Akwa Ibom State, Nigeria <br />
             <br />
             All rights reserved.
           </Text>
@@ -134,6 +61,8 @@ const footerText = {
   lineHeight: '15px',
   textAlign: 'left' as const,
   marginBottom: '50px',
+  // marginLeft: "10px",
+  // marginRight: "10px"
 };
 
 const footerLink = {
@@ -154,26 +83,41 @@ const socialMediaIcon = {
 };
 
 const main = {
-  backgroundColor: '#ffffff',
+  // backgroundColor: '#FFF8F5',
+  // backgroundColor: '#ffffff',
   margin: '0 auto',
   fontFamily:
     "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
 };
 
+const paragraph = {
+  fontSize: '14px',
+  lineHeight: '26px',
+  margin: '25px 0px'
+};
+
+const p = {
+  fontSize: '14px',
+  lineHeight: '26px',
+  margin: '5px 0'
+};
+
 const container = {
   maxWidth: '600px',
   margin: '0 auto',
+  // backgroundColor: '#FFF8F5',
 };
 
 const logoContainer = {
   marginTop: '32px',
+  marginLeft: "10px"
 };
 
 const h1 = {
   color: '#1d1c1d',
   fontSize: '36px',
-  fontWeight: '700',
-  margin: '30px 0',
+  fontWeight: '400',
+  margin: '30px 0px',
   padding: '0',
   lineHeight: '42px',
 };
@@ -181,15 +125,20 @@ const h1 = {
 const heroText = {
   fontSize: '20px',
   lineHeight: '28px',
-  marginBottom: '30px',
+  marginBottom: '20px',
+  // marginLeft: "10px",
+  // marginRight: "10px"
 };
 
 const codeBox = {
   background: 'rgb(245, 244, 245)',
   borderRadius: '4px',
-  marginRight: '50px',
+  marginRight: 'auto',
+  marginLeft: '0px',
+  // width: '100%',
+  // marginRight: '0px',
   marginBottom: '30px',
-  padding: '43px 23px',
+  padding: '20px 10px',
 };
 
 const confirmationCodeText = {
@@ -202,5 +151,6 @@ const text = {
   color: '#000',
   fontSize: '14px',
   lineHeight: '24px',
+  margin: "0 0px"
 };
   

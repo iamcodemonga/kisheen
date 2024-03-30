@@ -3,6 +3,12 @@ import Link from 'next/link'
 import Mealorders from '../datalist/Mealorders'
 import Changepassword from '../forms/Changepassword'
 import { MyOrders } from '@/lib/graphcms'
+import EditUserForm from '../forms/EditUserForm'
+import Bio from '@/components/profile/Userheading'
+
+import { authOptions } from '@/app/api/auth/[...nextauth]/options'
+import { getServerSession } from 'next-auth/next'
+import { EmailExists } from '@/lib/graphcms'
 
 type TUserProps = {
     id: string;
@@ -20,17 +26,15 @@ type Active = {
 
 const Usersection: FC<Active> = async({ page, user }) => {
     const orders =  await MyOrders(user.email, 6, 0)
+    const session = await getServerSession(authOptions)
+    const userparams = await EmailExists(session?.user?.email as string)
 
     return (
-        <section className='lg:grid grid-cols-6 container gap-7'>
-            <aside className='hidden lg:block lg:col-span-1 mb-6'>
-                <ul className='space-y-7'>
-                    <li className={page == 'index' ? 'py-4 lg:border-l-8 border-accent bg-accent/20 text-xl' : 'py-4 border-l-8 border-transparent hover:border-accent text-xl'}><Link href={`/dashboard`} className='py-2 pl-3 pr-10 font-bold'>All orders</Link></li>
-                    <li className={page == 'settings' ? 'py-4 lg:border-l-8 border-accent bg-accent/10 text-xl' : 'py-4 border-l-8 border-transparent hover:border-accent hover:bg-accent/5 text-xl'}><Link href={`/dashboard/settings`} className='py-2 pl-3 pr-10 font-bold'>Settings</Link></li>
-                </ul>
-            </aside>
+        <section className='px-10 gap-7'>
+            <Bio page='index' user={userparams[0]} />
             {page == 'index' && <Mealorders orders={orders} email={user.email} />}
-            {page == 'settings' && <Changepassword email={user.email} />}
+            {page == 'settings' && <EditUserForm />}
+            {/* {page == 'settings' && <Changepassword email={user.email} />} */}
         </section>
     )
 }

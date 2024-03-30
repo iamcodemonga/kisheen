@@ -2,8 +2,8 @@ import React from 'react'
 
 const MockCartList = () => {
     return (
-        <div className='w-full mt-10 lg:mt-7'>
-            {[1, 2, 3, 4, 5].map((product, index) => <div className='border-b-2 md:pb-8 mb-6 pb-6 w-full' key={index}>
+        <div className='w-full mt-5 lg:mt-1'>
+            {[1, 2, 3, 4, 5].map((product, index) => <div className='border-t md:pt-8 mb-6 pt-6 w-full' key={index}>
                 <div className='flex items-center gap-x-5 overflow-x-hidde w-full'>
                     <div className='bg-slate-300/50 w-16 h-16 md:w-20 md:h-20 rounded-lg'></div>
                     <div className='w-full'>

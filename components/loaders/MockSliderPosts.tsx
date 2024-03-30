@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 const MockSliderPosts = () => {
@@ -5,9 +6,9 @@ const MockSliderPosts = () => {
         <section>
             <div className='lg:flex mt-14 lg:mt-36 w-full'>
                 <div className='lg:block flex items-center justify-between lg:max-w-sm px-4 lg:px-8 lg:pl-20 mb-7 w-full'>
-                    <h3 className='font-black text-xl md:text-3xl lg:text-5xl my-0 lg:mt-10 leading-normal'><span className='hidden lg:block'>Featured Delicacies</span><span className='lg:hidden'>Featured Meals</span></h3>
-                    <p className='hidden lg:block lg:my-6 text-gray-700'>Make your choice from our list of delicious meals and get it delivered to your doorstep, today.</p>
-                    <div className='h-10 w-28 rounded-full bg-slate-300/50'></div>
+                    <h3 className='font-black text-xl md:text-3xl lg:text-5xl my-0 lg:mt-10 leading-normal'><span className='hidden lg:block'>Featured Delicacies</span><span className='lg:hidden'>Featured <span className='text-accent'>Meals</span></span></h3>
+                    <p className='hidden lg:block lg:my-6 text-gray-500 font-normal'>Make your choice from our list of delicious meals and get it delivered to your doorstep, today.</p>
+                    <Link href="/menu" className='btn-link !font-normal !text-primary'>View Menu</Link>
                 </div>
                 <div className='slider-container flex gap-3 lg:gap-6 overflow-x-auto w-full px-4 relative pb-3 scroll-smooth'>
                     {[1,2,3,4,5,6].map((meal:number, index: number) => <div className='slider-card relative' key={index}>

@@ -40,27 +40,30 @@ export type TCartItem = {
 
 export type TOrder = {
     id?: string;
+    mobile: boolean;
     receipt: string;
     mealId: string;
     customerId?: string | null;
     photo?: string;
     name: string;
-    combo: string;
+    combo?: string;
     meat: string;
     type: string;
     method: string;
-    firstName: string;
-    surname: string
+    firstname: string;
+    lastname: string
     email: string;
     tel?: string;
     country?: string;
-    state: string;
+    city: string;
     district: string;
     address: string;
     postalCode?: string;
     itemsCount: number;
     quantity: number;
+    size?: string | null;
     prepaid: boolean;
+    price: number;
     amount: number;
 }
 
@@ -87,11 +90,18 @@ export type TPaystackTransactionProps = {
 }
 
 export type OrdersEmailTemplateProps = {
-    name: string;
-    delivery: string;
-    receipt?: string
+    firstname: string;
+    delivery?: string;
+    receipt: string;
+    address: string;
+    amount: number;
+    items?: {
+        title: string;
+        price: number;
+    }[]
 }
 
 export type WelcomeEmailProps = {
     name: string;
+    discount?: number;
 }

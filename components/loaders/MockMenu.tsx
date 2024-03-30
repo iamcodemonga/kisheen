@@ -6,26 +6,27 @@ const MockMenu = () => {
             {/* <Menubar /> */}
             <aside className='pt-6 lg:pt-20 hidden lg:block lg:col-span-1 lg:pl-20 space-y-10'>
                 <div>
-                    <small className='text-accent font-bold'>CATEGORIES</small>
-                    <ul className='space-y-9 mt-4'>
-                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-7'></li>
-                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-7'></li>
-                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-7'></li>
-                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-7'></li>
+                    <small className='text-accent font-normal text-xs'>CATEGORIES</small>
+                    <ul className='space-y-9 mt-10'>
+                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-5'></li>
+                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-5'></li>
+                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-5'></li>
+                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-5'></li>
+                        <li className='w-full bg-slate-300/50 pb-2 pt-3 rounded-full h-5'></li>
                     </ul>
                 </div>
                 <div>
-                    <small className='text-accent font-bold'>PRICE FILTER</small>
-                    <form action="" method="post" className='space-y-5 mt-4'>
-                        <input type="number" name="" id="minimum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none max-w-full' placeholder='minimum price' disabled />
-                        <input type="number" name="" id="maximum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none max-w-full' placeholder='maximum price' disabled />
-                        <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-bold'>Filter</button>
+                    <small className='text-accent font-normal text-xs'>PRICE FILTER</small>
+                    <form action="" method="post" className='space-y-5 mt-4 w-full'>
+                        <input type="number" name="" id="minimum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='minimum price' value="" disabled />
+                        <input type="number" name="" id="maximum" className='bg-gray-200 px-3 py-2 rounded-lg outline-none w-full' placeholder='maximum price' value="" disabled />
+                        <button type="button" className='w-full pt-3 pb-2 rounded-lg bg-accent font-medium text-sm'>Filter</button>
                     </form>
                 </div>
             </aside>
             {/* <Fullmenu /> */}
             <section className='container py-6 lg:py-16 col-span-6 lg:col-span-5'>
-                <h1 className='text-3xl md:text-5xl font-extrabold capitalize my-5'>Food Menu</h1>
+                <h1 className='text-3xl md:text-5xl font-normal capitalize my-5'>Food Menu</h1>
                 <div className='flex items-center justify-start mb-7 w-full'>
                     <button type="button" className='lg:hidden mr-3'>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

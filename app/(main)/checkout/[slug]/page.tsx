@@ -8,8 +8,9 @@ import React from 'react'
 
 import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
-import { EmailExists } from '@/lib/graphcms'
 import Footer from '@/components/Footer';
+import { getUser } from '@/lib/datacalls';
+import axios from 'axios';
 
 type Props = {
     params: { slug: string };
@@ -18,9 +19,24 @@ type Props = {
 
 const SingleCheckout = async({ params, searchParams}: Props) => {
     const session = await getServerSession(authOptions)
-    const user = await EmailExists(session?.user?.email as string)
+    const user = await getUser(session?.user?.email as string)
 
     const item: TMeal = await Meal(params.slug);
+    const mobile = false;
+
+    const [ discount, settings ] = await Promise.all([
+        axios(`${process.env.API_ROOT}/settings/discount`),
+        axios(`${process.env.API_ROOT}/settings`)
+      ])
+
+      if (!settings.data.cardpay && !settings.data.manualpay) {
+        redirect("/")
+      }
+
+      const eligible: boolean = user.profile?.bonuslevel == 0 ? true : false;
+      console.log(eligible)
+    
+      let bonus: number = (user.profile?.bonuslevel == 0 ? process.env.REGBONUS : discount.data.type == "none" ? 0 : discount.data.type == "regular" ? discount.data.rate : discount.data.type == "seasonal" ? discount.data.type : 0);
     
     let meat: string | string[] | undefined = searchParams.meat;
     let combo: string | string[] | undefined = searchParams.combo;
@@ -28,8 +44,8 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
     let size: string | string[] | undefined = searchParams.size;
     let potPrices;
 
-    const meatList = [ 'goat meat', 'beef', 'chicken', 'turkey', 'pork', 'catfish', 'fresh fish', 'catfish and fresh fish', 'catfish with fresh fish' ];
-    const comboList: string[] = [ 'garri', 'fufu', 'semovita', 'pounded yam', 'amala', 'white rice', 'rice', 'yam', 'plantain', 'yam and plantain', 'salad', 'ofada sauce', 'salad and ofada sauce' ];
+    const meatList = [ 'goat meat', 'beef', 'chicken', 'turkey', 'pork', 'catfish', 'fresh fish', 'catfish and fresh fish', 'catfish with fresh fish', 'snails' ];
+    const comboList: string[] = [ 'garri', 'fufu', 'semovita', 'pounded yam', 'amala', 'white rice', 'rice', 'yam', 'plantain', 'yam and plantain', 'salad', 'ofada sauce', 'salad and ofada sauce', 'none' ];
     const sizeList: string[] = [ 'small(sm)', 'medium(md)', 'large(lg)', 'extra-large(xl)' ]
 
     if(!item) {
@@ -66,9 +82,9 @@ const SingleCheckout = async({ params, searchParams}: Props) => {
 
     return (
         <>
-            <Navbar user={user[0]} />
+            <Navbar user={user.profile} allowcart={settings.data.cart} />
             <CheckoutBanner meal={`${item.slug}`} />
-            <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} user={user[0]} />
+            <CheckoutForm item={item} meat={meat} combo={combo} qty={qty} size={size} potPrices={potPrices} user={user.profile} discount={1-(bonus/100)} rate={bonus} mobile={mobile} manualpay={settings.data.manualpay} cardpay={settings.data.cardpay} eligible={eligible} />
             <Footer />
         </>
     )

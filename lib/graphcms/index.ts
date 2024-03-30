@@ -20,6 +20,7 @@ export const SpecialMeals = async() => {
         name
         title
         slug
+        type
         price
         quantity
         photo {
@@ -40,6 +41,7 @@ export const FeaturedMeals = async() => {
         title
         slug
         price
+        type
         quantity
         photo {
           url
@@ -63,6 +65,29 @@ export const PotMeals = async() => {
         price
         priceSm
         priceXl
+        quantity
+        photo {
+          url
+        }
+      }
+    }`;
+  const result: { meals: TMeal[] } = await hygraph.request(QUERY)
+  return result.meals;
+}
+
+export const Choppables = async() => {
+  const QUERY = gql`
+    {
+      meals(where: {type: "chops"}) {
+        id
+        name
+        title
+        slug
+        price
+        type
+        category
+        combo
+        meat
         quantity
         photo {
           url
@@ -107,6 +132,7 @@ export const CategorisedMeals = async(category:string | null, limit: number, ski
         name
         title
         slug
+        type
         price
         quantity
         combo
@@ -131,6 +157,7 @@ export const FilterdedMeals = async(limit: number, skip: number, min:number, max
             name
             title
             slug
+            type
             price
             quantity
             combo
@@ -153,6 +180,7 @@ export const SearchMeals = async(word:string) => {
         name
         title
         slug
+        type
         price
         quantity
         combo
@@ -207,6 +235,7 @@ export const SimilarMeals = async(slug:string, category: string) => {
       price
       quantity
       slug
+      type
       title
       combo
       meat
@@ -253,12 +282,12 @@ export const CreateOrder = async(order: TOrder) => {
           meat: "${order.meat}",
           method: "${order.method}",
           type: "${order.type}",
-          firstName: "${order.firstName}",
-          surname: "${order.surname}",
+          firstName: "${order.firstname}",
+          surname: "${order.lastname}",
           email: "${order.email}",
           tel: "${order.tel}",
           country: "${order.country}",
-          state: "${order.state}",
+          state: "${order.city}",
           district: "${order.district}",
           address: "${order.address}",
           itemsCount: ${order.itemsCount},
@@ -388,5 +417,5 @@ export const MyOrders = async(email: string, limit: number, skip: number) => {
 export const playAudio = (file: string) => {
   const audio = new Audio(file);
   audio.volume = 0.2;
-  audio.play()
+  audio.play();
 }

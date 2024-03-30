@@ -12,6 +12,7 @@ defaults.maintainAspectRatio = false;
 // defaults.responsive = true;
 
 defaults.plugins.title.display = true;
+// defaults.plugins.title.text = "true";
 defaults.plugins.title.align = "start";
 defaults.plugins.title.color = "black";
 
@@ -22,7 +23,8 @@ const BarChart = ({ chartData }: { chartData: any }) => {
             title: {
                 text: "Monthly Orders",
                 font: {
-                    size: 20
+                    size: 20,
+                    weight: 400,
                 }
             }
         }

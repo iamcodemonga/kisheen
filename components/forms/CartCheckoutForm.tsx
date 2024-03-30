@@ -1,8 +1,8 @@
 "use client"
 
-import { TCartItem, TPaystackTransactionProps } from '@/types'
+import { TCartItem, TOrder, TPaystackTransactionProps } from '@/types'
 import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import EmptyCart from '../EmptyCart'
 import { useRouter } from 'next/navigation'
 import { usePaystackPayment } from 'react-paystack'
@@ -11,24 +11,26 @@ import { toast } from 'react-toastify'
 import OrderLoader from '../loaders/OrderLoader'
 import { playAudio } from '@/lib/graphcms'
 import MockOrderList from '../loaders/MockOrderList'
+import { clearCart } from '@/features/cartSlice'
 
 type TUserProps = {
     id: string;
-    firstName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     role: string;
     password?: string;
 }
 
-const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
+const CartCheckoutForm = ({ user, discount, rate, mobile, manualpay, cardpay, eligible }: { user: TUserProps, discount: number, mobile: boolean, rate: number, manualpay: boolean, cardpay: boolean, eligible: boolean }) => {
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
     const items = useSelector((state: { cart: { items: TCartItem[] }}) => state.cart.items)
     const amount = useSelector((state: { cart: { amount: number }}) => state.cart.amount);
     const pending = useSelector((state: { cart: { loading: boolean }}) => state.cart.loading);
 
     const router = useRouter();
+    const api = process.env.NEXT_PUBLIC_API_ROOT;
     const vat: number = 800;
     const districtList = [ 'Enugu central', 'Enugu north', 'Enugu east', 'Nkanu east', 'Nkanu west', 'Nsukka' ]
 
@@ -43,8 +45,8 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
     const [ loading, setLoading ] = useState<boolean>(false)
 
     // controlled inputs
-    const [ firstName, setFirstName ] = useState<string>(user ? user.firstName : '')
-    const [ lastName, setLastName ] = useState<string>(user ? user.lastName : '')
+    const [ firstname, setFirstName ] = useState<string>(user ? user.firstname : '')
+    const [ lastname, setLastName ] = useState<string>(user ? user.lastname : '')
     const [ email, setEmail ] = useState<string>(user ? user.email : '')
     const [ orderType, setOrderType ] = useState<string>('home')
     const [ country, setCountry ] = useState<string>('nigeria')
@@ -55,14 +57,14 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
 
     // handle Fuctions
     const config = {
-        name: `${firstName} ${lastName}`,
+        name: `${firstname} ${lastname}`,
         email,
         country,
         state,
         district,
         address,
         tel,
-        amount: ((amount*0.63)+fee+vat)*100,
+        amount: ((amount*discount)+fee+vat)*100,
         publicKey: `${process.env.NEXT_PUBLIC_PAYSTACK_PK}`,
     }
 
@@ -77,31 +79,77 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
 
     const receipt = generateReceipt();
 
-    const handleOrder = async(method: string, materials: any, receipt?: string) => {
+    const handleOrder = async(method: string, materials: Array<TOrder>, receipt?: string) => {
         setLoading(true)
         try {
-            const { data } = await axios.post(`/api/user/orders?method=${method}`, materials);
-            if(data.status == "ok") {
-                const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstName, email: email, receipt, delivery: orderType });
-                if (response.status == "ok") {
-                    toast.success(`${response?.message}`, {
-                        position: "bottom-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                    });
-                    playAudio('/livechat.mp3')
-                    setLoading(false);
-                    router.push(`/thanks?refno=${receipt}`);
-                    return;
-                }
+            const { data } = await axios.post(`${api}/orders?method=${method}&eligible=${eligible}`, materials);
+            if (data.error) {
+                toast.error(`Could not place order!`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 setLoading(false);
                 return;
             }
+            const response = await axios.post(`/api/send?type=order&method=${method}`, { name: firstname, email: email, receipt, delivery: orderType, address, amount:(amount*discount)+fee+vat });
+            if(response.data.status == "ok") {
+                toast.success(`Order was successful!`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                playAudio('/livechat.mp3')
+                dispatch(clearCart())
+                setLoading(false);
+                router.push(`/thanks?refno=${receipt}`);
+                return;
+            } else {
+                toast.error(`${response.data.message}`, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+                setLoading(false)
+                playAudio('/error.mp3')
+                return;
+            }
+            // if(data.status == "ok") {
+            //     const { data: response } = await axios.post(`/api/send?type=order&method=${method}`, { name: firstname, email: email, receipt, delivery: orderType });
+            //     if (response.status == "ok") {
+            //         toast.success(`${response?.message}`, {
+            //             position: "bottom-right",
+            //             autoClose: 5000,
+            //             hideProgressBar: false,
+            //             closeOnClick: true,
+            //             pauseOnHover: true,
+            //             draggable: true,
+            //             progress: undefined,
+            //             theme: "colored",
+            //         });
+            //         playAudio('/livechat.mp3')
+            //         setLoading(false);
+            //         router.push(`/thanks?refno=${receipt}`);
+            //         return;
+            //     }
+            //     setLoading(false);
+            //     return;
+            // }
         } catch (error) {
             console.log(error)
         }
@@ -111,8 +159,28 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
 
     const onSuccess = (transaction?: TPaystackTransactionProps) => {
         if (transaction?.message == "Approved" && transaction?.status == "success") {
-            const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: (user ? user.id : null), name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: true, amount: (amount*0.63)+fee+vat}
-            });
+            const properties = items.map((item: TCartItem) => { return { 
+                mobile,
+                receipt: receipt, 
+                mealId: item.id as string, 
+                photo: item.photo, 
+                customerId: (user ? user.id : null), 
+                name: item.name as string, 
+                combo: item.combo as string, 
+                meat: item.meat as string, 
+                type: item.type as string, 
+                firstname: firstname.toLowerCase(), 
+                lastname: lastname.toLowerCase(), 
+                email: email.toLowerCase(), 
+                method: orderType, 
+                tel, country, city: state, district, address, 
+                itemsCount: items.length, 
+                quantity: Number(item.cartQty), 
+                size: null,
+                prepaid: true, 
+                price: (Number(item.price)*discount)+fee+vat,
+                amount: (amount*discount)+fee+vat
+            }});
             handleOrder('card', properties, receipt)
             return;
         }
@@ -159,13 +227,12 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
     }
 
     const handleCardCheckout= async() => {
-
         let nameRegex = /^([a-zA-Z ]+)$/;
         let emailRegex = /^([a-zA-Z0-9\.\-_]+)@([a-zA-Z0-9\-]+)\.([a-z]{2,10})(\.[a-z]{2,10})?$/;
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(firstName.trim() == "" || lastName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstname.trim() == "" || lastname.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -196,7 +263,7 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+        if(!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -253,7 +320,7 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
         let telRegex = /^([0-9]{5,18})$/;
 
         // check for empty input forms
-        if(firstName.trim() == "" || lastName.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
+        if(firstname.trim() == "" || lastname.trim() == "" || email.trim() == "" || state.trim() == "" || district.trim() == "" || tel.trim() == "") {
             toast.error(`Please fill in all fields!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -284,7 +351,7 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
         }
 
         // check for invalid customer name format
-        if(!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+        if(!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
             toast.error(`Name must only contain alphabets!`, {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -331,10 +398,28 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
         }
 
         // console.log(properties);
-        const properties = items.map((item: TCartItem) => { return { receipt: receipt, mealId: item.id as string, photo: item.photo, customerId: (user ? user.id : null), name: item.name, combo: item.combo as string, meat: item.meat as string, type: "casual/special", firstName: firstName.toLowerCase(), surname: lastName.toLowerCase(), email: email.toLowerCase(), method: orderType, tel, country, state, district, address, itemsCount: items.length, quantity: Number(item.cartQty), prepaid: false, amount: (amount*0.63)+fee+vat}
-        });
-
-        console.log(properties)
+        const properties = items.map((item: TCartItem) => { return { 
+            mobile,
+            receipt: receipt, 
+            mealId: item.id as string, 
+            photo: item.photo, 
+            customerId: (user ? user.id : null), 
+            name: item.name as string, 
+            combo: item.combo as string, 
+            meat: item.meat as string, 
+            type: item.type as string, 
+            firstname: firstname.toLowerCase(), 
+            lastname: lastname.toLowerCase(), 
+            email: email.toLowerCase(), 
+            method: orderType, 
+            tel, country, city: state, district, address, 
+            itemsCount: items.length, 
+            quantity: Number(item.cartQty), 
+            size: null,
+            prepaid: false, 
+            price: (Number(item.price)*discount)+fee+vat,
+            amount: (amount*discount)+fee+vat
+        }});
         handleOrder('cash', properties, refno);
         return;
     }
@@ -351,30 +436,30 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
     }
 
     return (
-        <section className='container mt-20'>
+        <section className='px-4 lg:px-20 mt-20'>
             {loading ? <OrderLoader pending={loading} /> : null}
             <form action="" method="post" className='lg:grid grid-cols-10 mb-36 gap-x-12 space-y-10 lg:space-y-0' onSubmit={(e) => e.preventDefault()}>
                 <div className='col-span-6'>
                     {!user ? <div className='space-y-5'>
-                        <h5 className='font-bold text-xl'>Personal details</h5>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="firstname" className='text-accent'>First name</label>
-                            <input className='bg-transparent outline-none' type="text" name="firstname" id="firstname" placeholder='Input your first name' value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+                        <h5 className='font-medium text-xl'>Personal details</h5>
+                        <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="firstname" className='text-accent text-sm'>First name</label>
+                            <input className='bg-transparent outline-none placeholder:font-light' type="text" name="firstname" id="firstname" placeholder='Input your first name' value={firstname} onChange={(e) => setFirstName(e.target.value)} />
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="lastname" className='text-accent'>Surname</label>
-                            <input className='bg-transparent outline-none' type="text" name="lastname" id="lastname" placeholder='Input your surname' value={lastName} onChange={(e) => setLastName(e.target.value)} />
+                        <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="lastname" className='text-accent text-sm'>Surname</label>
+                            <input className='bg-transparent outline-none placeholder:font-light' type="text" name="lastname" id="lastname" placeholder='Input your surname' value={lastname} onChange={(e) => setLastName(e.target.value)} />
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="email" className='text-accent'>Email</label>
-                            <input type="email" name="" id="email" className='bg-transparent outline-none' placeholder='Input your email address' value={email} onChange={(e) => setEmail(e.target.value)} />
+                        <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="email" className='text-accent text-sm'>Email</label>
+                            <input type="email" name="" id="email" className='bg-transparent outline-none placeholder:font-light' placeholder='Input your email address' value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
                     </div> : null}
                     <div className='space-y-5'>
-                        <h5 className='font-bold mt-10 text-xl'>Address Informations</h5>
-                        <div className='hidden flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="country" className='text-accent'>Country</label>
-                            <select name="country" id="country" className='bg-transparent outline-none' value={country} onChange={(e) => setCountry(e.target.value)}>
+                        <h5 className='font-medium mt-10 text-xl'>Address Informations</h5>
+                        <div className='hidden flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="country" className='text-accent text-sm'>Country</label>
+                            <select name="country" id="country" className='bg-transparent outline-none placeholder:font-light' value={country} onChange={(e) => setCountry(e.target.value)}>
                                 <option value="nigeria">Nigeria</option>
                                 <option value="ghana" disabled>Ghana</option>
                                 <option value="UAE" disabled>United Arab Emirates</option>
@@ -384,16 +469,16 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                                 <option value="SA" disabled>South Africa</option>
                             </select>
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="ordertype" className='text-accent'>Order type</label>
-                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none' value={orderType} onChange={(e) => handleMethod(e.target.value)}>
+                        <div className='hidden flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="ordertype" className='text-accent text-sm mb-1 ml-1'>Order type</label>
+                            <select name="ordertype" id="ordertype" className='bg-transparent outline-none placeholder:font-light' value={orderType} onChange={(e) => handleMethod(e.target.value)}>
                                 <option value="home" style={{ padding: '200px'}}>Home delivery</option>
                                 <option value="pickup">Shop pickup</option>
                             </select>
                         </div>
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="state" className='text-accent'>State</label>
-                            <select name="state" id="state" className='bg-transparent outline-none' value={state} onChange={(e) => setState(e.target.value)}>
+                        <div className='hidden flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="state" className='text-accent text-sm mb-1 ml-1'>State</label>
+                            <select name="state" id="state" className='bg-transparent outline-none placeholder:font-light' value={state} onChange={(e) => setState(e.target.value)}>
                                 <option value="enugu">Enugu</option>
                                 <option value="anambra" disabled>Anambra</option>
                                 <option value="portharcourt" disabled>Port Harcourt</option>
@@ -403,30 +488,30 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                                 <option value="abuja" disabled>Abuja</option>
                             </select>
                         </div>
-                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="subject" className='text-accent'>District</label>
+                        {orderType == "home" ? <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="subject" className='text-accent text-sm mb-1 ml-1'>Area / District</label>
                             <select name="" id="subject" className='bg-transparent outline-none' value={district} onChange={(e) => handleDistrict(e.target.value)}>
                                 {districtList.length > 0 ? districtList.map((area, index) => <option value={area} key={index}>{area}</option>) : null}
                             </select>
                         </div>: null}
-                        {orderType == "home" ? <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="address" className='text-accent'>Address line</label>
-                            <input className='bg-transparent outline-none' type="text" name="" id="address" placeholder='Add your address line' value={address} onChange={(e) => setAddress(e.target.value)} />
+                        {orderType == "home" ? <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="address" className='text-accent text-sm'>Address line</label>
+                            <input className='bg-transparent outline-none placeholder:font-light' type="text" name="" id="address" placeholder='Add your address line' value={address} onChange={(e) => setAddress(e.target.value)} />
                         </div> : null}
-                        <div className='flex flex-col bg-gray-200 p-3 rounded-xl'>
-                            <label htmlFor="phone" className='text-accent'>Phone number</label>
-                            <input className='bg-transparent outline-none' type="tel" name="" id="phone" placeholder='Add your phone number' value={tel} onChange={(e) => setTel(e.target.value)} />
+                        <div className='flex flex-col bg-slate-200 p-3 rounded-xl'>
+                            <label htmlFor="phone" className='text-accent text-sm'>Phone number</label>
+                            <input className='bg-transparent outline-none placeholder:font-light' type="tel" name="" id="phone" placeholder='Add your phone number' value={tel} onChange={(e) => setTel(e.target.value)} />
                         </div>
                     </div>
                 </div>
                 <div className='col-span-4'>
-                    <h5 className={user ? 'mb-8 font-bold text-xl lg:mt-10' : 'mb-8 font-bold text-xl'}>Ordered Meal</h5>
+                    <h5 className={user ? 'mb-8 font-medium text-xl lg:mt-10' : 'mb-8 font-medium text-xl'}>Ordered Meal</h5>
                     <div className='space-y-5'>
                         {!pending ? items.length > 0 ? items.map((item: TCartItem, index: number) => <div className='space-y-2' key={index}>
                             <div className='flex items-center mb-0'>
                                 <img className='object-cover w-12 h-12 md:w-12 md:h-12 rounded-lg'  src={item.photo} alt="cart-image" />
                                 <div className='ml-5'>
-                                    <h6 className='my-0 font-bold'>{item.title}</h6>
+                                    <h6 className='my-0 font-normal'>{item.title}</h6>
                                     <div className='space-x-6 hidden md:block'>
                                         <small><strong className='text-accent'>Qty:</strong> {item.cartQty}</small>
                                         <small><strong className='text-accent'>Combo:</strong> {item.combo}</small>
@@ -444,11 +529,13 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                         </div>) : <EmptyCart /> : <MockOrderList /> }
                     </div>
                     {!pending ? items.length >= 1 ? <div className='mt-10'>
-                        <h5 className='font-bold mb-5 text-xl'>Summary</h5>
+                        <h5 className='font-medium mb-5 text-xl'>Summary</h5>
                         <div className='space-y-0'>
                             <div className='flex items-center justify-between'>
-                                <p className='text-gray-700 text-sm'>Sub-total <strong className='text-green-600'>(37% off)</strong></p>
-                                <p className='space-x-3'><span className='line-through text-red-600'>&#8358;{amount.toLocaleString()}</span><span className='text-green-600'>&#8358;{(amount*0.63).toLocaleString()}</span></p>
+                                <p className='text-gray-700 text-sm'>Sub-total {rate > 0 ? <strong className='text-green-600'>({rate}% off)</strong> : null}</p>
+                                <p className='space-x-3'>
+                                    {rate > 0 ? <span className='line-through text-red-600'>&#8358;{amount.toLocaleString()}</span> : null}
+                                    <span className='text-green-600'>&#8358;{(amount*discount).toLocaleString()}</span></p>
                             </div>
                             <div className='flex items-center justify-between'>
                                 <p className='text-gray-700 text-sm'>Delivery fee</p>
@@ -459,13 +546,13 @@ const CartCheckoutForm = ({ user }: { user: TUserProps}) => {
                                 <p>&#8358;{vat.toLocaleString()}</p>
                             </div>
                             <div className='flex items-center justify-between'>
-                                <p className='font-bold'>Total</p>
-                                <p>&#8358;{((amount*0.63)+fee+vat).toLocaleString()}</p>
+                                <p className='font-medium'>Total</p>
+                                <p>&#8358;{((amount*discount)+fee+vat).toLocaleString()}</p>
                             </div>
                             <div className='space-y-4'>
-                                <button type="button" className='w-full py-3 bg-blue-950 font-bold text-white' onClick={handleCardCheckout}>Pay with card</button>
-                                {orderType == "home" ? <button type="button" className='w-full py-3 bg-accent font-bold' onClick={(e) => handleFreeCheckout(receipt)}>Pay on delivery</button> : null}
-                                {orderType == "home" ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null}
+                                <button type="button" className={`w-full py-3 font-medium text-primary rounded-lg ${cardpay ? manualpay ? "bg-blue-950 hover:bg-blue-900":  "bg-gray-900 hover:bg-gray-800" : "hidden"}`} onClick={handleCardCheckout}>{cardpay ? manualpay ? "Pay with card" : "Place order" : "Pay with card"}</button>
+                                {orderType == "home" ? <button type="button" className={`w-full py-3 bg-accent hover:bg-accent/90 text-primary font-medium rounded-lg ${!manualpay ? "hidden" : null}`} onClick={() => handleFreeCheckout(receipt)}>Pay on delivery</button> : null}
+                                {orderType == "home" ? manualpay ? <p className='text-red-500 text-sm'><strong>ATTENTION:</strong> Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis distinctio corporis unde, et eligendi sed!!!</p> : null : null}
                             </div>
                         </div>
                     </div> : null : null }

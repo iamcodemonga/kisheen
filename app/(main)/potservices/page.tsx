@@ -7,17 +7,18 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/options'
 import { getServerSession } from 'next-auth/next'
 import { EmailExists } from '@/lib/graphcms'
 import Footer from '@/components/Footer'
+import { getUser } from '@/lib/datacalls'
+import axios from 'axios'
 
 const Potservices = async() => {
     const session = await getServerSession(authOptions)
-    const user = await EmailExists(session?.user?.email as string)
+    const user = await getUser(session?.user?.email as string)
+    const { data } = await axios(`${process.env.API_ROOT}/settings`);
 
     return (
         <>
-            <Navbar user={user[0]} />
+            <Navbar user={user.profile} allowcart={data.cart} />
             <Meals />
-            <Footer />
-            <WhatsApp />
         </>
     )
 }
