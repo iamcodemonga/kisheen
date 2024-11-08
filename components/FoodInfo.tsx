@@ -14,18 +14,24 @@ const FoodInfo = ({ meal, allowcart, discount }: { meal: TMeal, allowcart: boole
     // Array of combo and meat
     const comboList = meal.combo?.split(',') as string[];
     const meatList = meal.meat?.split(',') as string[];
+    
 
     // States
     const [ food, setFood ] = useState<TMeal>(meal);
     const [ combo, setCombo ] = useState<string>(comboList[0])
     const [ meat, setMeat ] = useState<string>(meatList[0])
+    const [ pepper, setPepper ] = useState<string>("normal")
+    const [ spicing, setSpicing ] = useState<string>("normal")
+    const [ purpose, setPurpose ] = useState<string>("personal")
     // const [ quantity, setQuantity ] = useState<number>(1)
     const [ quantity, setQuantity ] = useState<string>("1")
     const [ potSize, setPotSize ] = useState<string>('medium(md)')
     const [ amount, setAmount ] = useState<number>(meal.price)
+    const [ purprice, setPurprice ] = useState<number>(0)
 
     // Array of pot sizes
     const sizeList: string[] = ['small(sm)', 'medium(md)', 'large(lg)', 'extra-large(xl)']
+    console.log(food.category);
 
     //  Executive functions
     const handleSize = (size: string) => {
@@ -52,6 +58,26 @@ const FoodInfo = ({ meal, allowcart, discount }: { meal: TMeal, allowcart: boole
 
     const handleMeat = (bitable: string) => {
         setMeat(bitable)
+        return;
+    }
+
+    const handleSpicing = (selection: string) => {
+        setSpicing(selection)
+        return;
+    }
+
+    const handlePepper = (selection: string) => {
+        setPepper(selection)
+        return;
+    }
+
+    const handlePurpose = (selection: string) => {
+        if (selection == "gathering") {
+            setPurprice(10000)
+        } else {
+            setPurprice(0)
+        }
+        setPurpose(selection)
         return;
     }
 
@@ -93,7 +119,7 @@ const FoodInfo = ({ meal, allowcart, discount }: { meal: TMeal, allowcart: boole
             <div className="col-span-2 lg:col-span-1">
                 <h1 className='my-0 text-2xl md:text-4xl font-normal lg:leading-snug'>{food.title}</h1>
                 <h5 className='space-x-3 mb-5 mt-3'>
-                    <span className={food.type == 'pot' ? 'text-green-700 font-normal' : discount > 0 ? 'text-red-700 line-through font-normal' : 'text-green-700 font-normal' }>&#8358;{amount.toLocaleString()}</span>
+                    <span className={food.type == 'pot' ? 'text-green-700 font-normal' : discount > 0 ? 'text-red-700 line-through font-normal' : 'text-green-700 font-normal' }>&#8358;{(amount+purprice).toLocaleString()}</span>
                     <span className={food.type == 'pot' ? 'text-green-700 hidden' : discount > 0 ? 'text-green-700 font-normal' : 'hidden'}>&#8358;{(amount*(1-(discount/100))).toLocaleString()}</span></h5>
                 {food.description && <p className='hidde'>{food.description}</p>}
                 <form action="" method="post" className={food.type == 'pot' ? `space-y-4 mt-8 hidden` : `space-y-4 mt-8`}>
@@ -120,19 +146,52 @@ const FoodInfo = ({ meal, allowcart, discount }: { meal: TMeal, allowcart: boole
                 </form>
                 <form action="" method="post" className={food.type == 'pot' ? `space-y-4 mt-8` : `space-y-4 mt-8 hidden`}>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-normal text-sm text-accent'>Pot size</label>
+                        <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Pot size</label>
                         <select name="" id="" value={potSize} onChange={(e) => handleSize(e.target.value)} className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {sizeList && sizeList.map(size => <option value={size} className=''>{size}</option>)}
                         </select>
                     </div>
                     <div className='flex flex-col'>
-                        <label htmlFor="" className='font-normal text-sm text-accent'>Meat</label>
+                        <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Meat</label>
                         <select name="" id="" value={meat} onChange={(e) => handleMeat(e.target.value)}  className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
                             {meatList && meatList.map(bite => <option value={bite}>{bite}</option>)}
                         </select>
                     </div>
+                    <div className='w-full flex items-center space-x-3 lg:space-x-5'>
+                        <div className='w-full flex flex-col'>
+                            <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Pepper</label>
+                            <select name="" id="" value={pepper} onChange={(e) => handlePepper(e.target.value)}  className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
+                                <option value={"fire"}>Very Hot</option>
+                                <option value={"hot"}>Hot</option>
+                                <option value={"normal"}>Normal</option>
+                                <option value={"none"}>None</option>
+                            </select>
+                        </div>
+                        <div className='w-full flex flex-col'>
+                            <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Spicing</label>
+                            <select name="" id="" value={spicing} onChange={(e) => handleSpicing(e.target.value)}  className='w-full py-3 px-3 bg-slate-200 rounded-lg outline-none'>
+                                <option value={"high"}>High</option>
+                                <option value={"normal"}>Normal</option>
+                                <option value={"low"}>Low</option>
+                                <option value={"none"}>None</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className='w-full lg:flex items-center space-x-0 lg:space-x-5 space-y-4 lg:space-y-0'>
+                        <div className='w-full flex flex-col'>
+                            <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Purpose</label>
+                            <select name="" id="" value={purpose} onChange={(e) => handlePurpose(e.target.value)}  className={`${food.type == "pot" ? "w-full py-3 px-3 bg-slate-200 rounded-lg outline-none" : "hidden"}`}>
+                                <option value={"personal"}>Personal use</option>
+                                {food.category != "soup" ? <option value={"gathering"}>Gathering (corporate, family and friends)</option> : null}
+                            </select>
+                        </div>
+                        {/* <div className='w-full flex flex-col'>
+                            <label htmlFor="" className='font-normal text-sm text-accent ml-1'>Allegies (optional)</label>
+                            <input type="text" name="" id="" className='w-full py-[9px] px-3 bg-slate-200 rounded-lg outline-none text-[16px]' placeholder='What are you allegic to?' />
+                        </div> */}
+                    </div>
                     <div>
-                        <Link href={`/checkout/${food.slug}?meat=${meat.trim()}&size=${potSize}`} className='bg-accent hover:bg-accent/90 w-full pt-4 pb-3 rounded-lg font-medium mt-8 uppercase text-sm text-center block text-primary'>Buy Now</Link>
+                        <Link href={`/checkout/${food.slug}?meat=${meat.trim()}&size=${potSize}&pepper=${pepper}&spicing=${spicing}&purpose=${purpose}`} className='bg-accent hover:bg-accent/90 w-full pt-5 pb-5 rounded-lg font-medium mt-8 capitalize text-sm text-center block text-primary'>Proceed to Checkout</Link>
                     </div>
                 </form>
             </div>

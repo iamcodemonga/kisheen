@@ -9,11 +9,11 @@ const loading = () => {
     return (
       <>
         <MockBanner />
-        <MockSliderPosts />
-        <MockBites />
-        <MockPots />
-        <AppLaunch />
-        <Contact />
+        {/* <MockSliderPosts /> */}
+        {/* <MockBites /> */}
+        {/* <MockPots /> */}
+        {/* <AppLaunch /> */}
+        {/* <Contact /> */}
       </>
     )
 }

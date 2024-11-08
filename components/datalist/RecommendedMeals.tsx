@@ -29,10 +29,11 @@ const RecommendedMeals = ({ meals, type, allowcart, discount }: Props) => {
                     <Link href={`/meal/${meal.slug}`}>
                         <img className='object-cover rounded-xl' src={meal.photo.url} alt="food" width={500} height={900} style={{width: '100%', height: '350px'}}/>
                     </Link>
-                    <h4 className='mt-4 mb-1 text-xl font-normal'><Link href={`meal/${meal.slug}`}>{meal.title}</Link></h4>
+                    {type == "pot" ? <span className='absolute top-0 left-0 font-normal text-base rounded-tl-xl text-primary space-x-3 bg-green-700 pt-2 pb-1 px-4'>ready in 5h - 24h</span> : null}
+                    <h4 className='text-xl lg:text-3xl font-normal mt-4 mb-1 ml-2'><Link href={`meal/${meal.slug}`}>{meal.title}</Link></h4>
                     <div className='flex justify-between items-center w-full'>
                         <div className='space-x-3'>
-                            {type == "pot" ? <span className='text-green-700 font-normal text-sm'>&#8358;{`${meal.priceSm?.toLocaleString()}`} &ndash; &#8358;{`${meal.priceXl?.toLocaleString()}`}</span> : <>
+                            {type == "pot" ? <span className='text-sm text-green-700 ml-2'>&#8358;{`${meal.priceSm?.toLocaleString()}`} — &#8358;{`${meal.priceXl?.toLocaleString()}`}</span> : <>
                                 <span className={`${discount > 0 ? "text-red-700 line-through" : "text-green-700"} text-sm lg:text-sm font-normal`}>&#8358;{meal.price.toLocaleString()}</span>{discount > 0 ?<span className='text-green-700 text-sm lg:text-sm font-normal'>&#8358;{(meal.price*(1-(discount/100))).toLocaleString()}</span> : null}
                             </>}
                         </div>

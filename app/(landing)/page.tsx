@@ -15,6 +15,8 @@ import { getUser } from '@/lib/datacalls'
 import axios from 'axios'
 import RegisterBonusPop from '@/components/popups/RegisterBonusPop'
 import Discount from '@/components/popups/Discount'
+import PopularMeals from '@/components/datalist/potcustom/PopularMeals'
+import HomePotList from '@/components/datalist/potcustom/HomePotList'
 
 export const dynamic = "force-dynamic";
 
@@ -39,9 +41,11 @@ export default async function Home() {
       <>
         <Navbar user={user.profile} allowcart={settings.data.cart} />
         <Banner />
-        <FeaturedMenu meals={meals} discount={bonus} allowcart={settings.data.cart} />
-        <Bigbites meals={chopps} allowcart={settings.data.cart} discount={bonus} />
-        <Potservices />
+        <PopularMeals />
+        <HomePotList />
+        {/* <FeaturedMenu meals={meals} discount={bonus} allowcart={settings.data.cart} /> */}
+        {/* <Bigbites meals={chopps} allowcart={settings.data.cart} discount={bonus} /> */}
+        {/* <Potservices /> */}
         <AppLaunch />
         <Contact />
         {loggedin ? null : <RegisterBonusPop loggedin={loggedin} />}

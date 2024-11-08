@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import { TMeal } from '@/types'
 import { SpecialMeals } from '@/lib/graphcms';
-import SwiperList from '../datalist/SwiperList';
+// import SwiperList from '../datalist/SwiperList';
+import HeroList from '../datalist/potcustom/HeroList';
 
 const Banner = async() => {
 
@@ -13,7 +14,8 @@ const Banner = async() => {
 
     const meals: TMeal[] = await SpecialMeals();
 
-    return <SwiperList meals={meals} />
+    // return <SwiperList meals={meals} />
+    return <HeroList meals={meals} />
     
 }
 

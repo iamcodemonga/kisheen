@@ -22,7 +22,7 @@ const Aboutheader = () => {
                         <div className='space-y-10'>
                             <div className='md:flex max-w-lg items-center gap-5'>
                                 <h1 className='mb-4 md:mb-3 text-5xl font-black'>01</h1>
-                                <p className='text-gray-500 font-normal text-base'>Browse our <Link href="/menu" className='text-accent underline'>menu</Link> to discover your favorite meal, customize it to your taste, proceed to checkout or add it to your <Link href="/cart" className='text-accent underline'>cart</Link>.</p>
+                                <p className='text-gray-500 font-normal text-base'>Browse our <Link href="/pot-menu" className='text-accent underline'>menu</Link> to discover your favorite meal, customize it to your taste, proceed to checkout or add it to your <Link href="/cart" className='text-accent underline'>cart</Link>.</p>
                             </div>
                             <div className='md:flex max-w-lg items-center gap-5'>
                                 <h1 className='mb-4 md:mb-3 text-5xl font-black'>02</h1>

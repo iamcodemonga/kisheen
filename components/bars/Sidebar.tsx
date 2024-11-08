@@ -38,8 +38,9 @@ const Sidebar: FC<status> = ({ open, handleClose, user }) => {
             </div>
             <ul className='space-y-10'>
                 <li><p className='text-center'><Link href="/" className={pathname == '/' ? 'text-4xl font-normal text-accent' : 'text-xl'}>Home</Link></p></li>
-                <li><p className='text-center'><Link href="/menu" className={pathname.startsWith('/menu') ? 'text-4xl font-normal text-accent' : 'text-xl text-gray-800'}>Food Menu</Link></p></li>
-                <li><p className='text-center'><Link href="/potservices" className={pathname.startsWith('/potservices') ? 'text-4xl font-normal text-accent' : 'text-xl'}>Pot Services</Link></p></li>
+                <li><p className='text-center'><Link href="/pot-menu" className={pathname.startsWith('/pot-menu') ? 'text-4xl font-normal text-accent' : 'text-xl'}>Our Menu</Link></p></li>
+                {/* <li><p className='text-center'><Link href="/menu" className={pathname.startsWith('/menu') ? 'text-4xl font-normal text-accent' : 'text-xl text-gray-800'}>Food Menu</Link></p></li> */}
+                {/* <li><p className='text-center'><Link href="/potservices" className={pathname.startsWith('/potservices') ? 'text-4xl font-normal text-accent' : 'text-xl'}>Pot Services</Link></p></li> */}
                 <li><p className='text-center'><a href="mailto:management@kisheen.com" className='text-xl'>Contact</a></p></li>
                 <li><p className='text-center'><Link href="/about" className={pathname.startsWith('/about') ? 'text-4xl font-normal text-accent' : 'text-xl'}>About</Link></p></li>
                 {user ? <li><p className='text-center'><Link href="/dashboard" className={pathname.startsWith('/dashboard') ? 'text-4xl font-normal text-accent' : 'text-xl'}>Dashboard</Link></p></li> : <li><p className='text-center'><Link href="/login" className={pathname.startsWith('/login') ? 'text-4xl font-normal text-accent' : 'text-xl'}>Login</Link></p></li>}
